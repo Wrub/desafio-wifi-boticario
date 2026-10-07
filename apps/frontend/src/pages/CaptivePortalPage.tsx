@@ -7,7 +7,7 @@ import { MAX_PERIOD, periodToRange } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
 import { storePath } from '../hooks/use-store-route';
 import { simulatedDevice } from '../utils/device';
-import { DEVICE_LABELS } from '../utils/format';
+import { DEVICE_LABELS, maskCpfInput, maskPhoneInput } from '../utils/format';
 
 // /portal é o captive portal (simulação); /portal/<loja> já abre numa loja
 const PORTAL_PATH = /^\/portal(?:\/([^/]+))?\/?$/;
@@ -201,7 +201,7 @@ export function CaptivePortalPage() {
               placeholder="(41) 99999-8888"
               hint="É por ele que reconhecemos você nas próximas visitas."
               value={form.phone}
-              onChange={(value) => update('phone', value)}
+              onChange={(value) => update('phone', maskPhoneInput(value))}
               error={errors.phone}
             />
             <TextField
@@ -226,7 +226,7 @@ export function CaptivePortalPage() {
                 inputMode="numeric"
                 placeholder="000.000.000-00"
                 value={form.cpf}
-                onChange={(value) => update('cpf', value)}
+                onChange={(value) => update('cpf', maskCpfInput(value))}
                 error={errors.cpf}
               />
             </fieldset>

@@ -80,6 +80,26 @@ describe('CaptivePortalPage', () => {
     expect(await screen.findByText(/CPF foi vinculado ao clube/)).toBeInTheDocument();
   });
 
+  it('formata celular e CPF enquanto digita', async () => {
+    const api = fakeApi();
+    renderPortal(api);
+    await userEvent.type(await screen.findByLabelText('Nome'), 'Maria Souza');
+    await userEvent.type(screen.getByLabelText('Celular'), '41999998888');
+    await userEvent.type(screen.getByLabelText('E-mail'), 'maria@email.com');
+    await userEvent.type(screen.getByLabelText('CPF'), '52998224725');
+    await userEvent.click(screen.getByRole('checkbox'));
+
+    expect(screen.getByLabelText('Celular')).toHaveValue('(41) 99999-8888');
+    expect(screen.getByLabelText('CPF')).toHaveValue('529.982.247-25');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Conectar' }));
+
+    expect(vi.mocked(api.registerConnection).mock.lastCall?.[0].visitor).toMatchObject({
+      phone: '(41) 99999-8888',
+      cpf: '529.982.247-25',
+    });
+  });
+
   it('valida antes de enviar: celular e termos', async () => {
     const api = fakeApi();
     renderPortal(api);
