@@ -39,6 +39,7 @@ export class StoresController {
       ...result,
       items: result.items.map((item) => ({
         ...item,
+        visitTimes: item.visitTimes.map((time) => time.toISOString()),
         lastConnectedAt: item.lastConnectedAt.toISOString(),
       })),
     };

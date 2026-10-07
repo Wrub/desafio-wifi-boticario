@@ -37,6 +37,7 @@ export interface StoreVisitorRow {
   cpf: string;
   email: string;
   visits: number;
+  visitTimes: Date[];
   lastConnectedAt: Date;
   lastDevice: { macAddress: string; type: DeviceType; os: string | null };
 }

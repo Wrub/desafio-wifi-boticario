@@ -37,6 +37,8 @@ export const storeVisitorSchema = z.object({
   maskedCpf: z.string(),
   email: z.string(),
   visits: z.number().int().positive(),
+  // horário de cada visita no período, da primeira pra última
+  visitTimes: z.array(z.iso.datetime({ offset: true })),
   lastConnectedAt: z.iso.datetime({ offset: true }),
   lastDevice: z.object({
     macAddress: z.string(),

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@wifi/contracts": "0.1.0",
+    "date-fns": "4.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "zod": "4.6.5"

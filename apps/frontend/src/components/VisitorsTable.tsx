@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import type { StoreVisitorsPage } from '@wifi/contracts';
-import { DEVICE_LABELS, formatDateTime, formatNumber } from '../utils/format';
+import { DEVICE_LABELS, formatDateTime, formatNumber, formatWeekdayTime } from '../utils/format';
+
+// quantas visitas aparecem antes do "+N"
+const VISIT_TIMES_PREVIEW = 3;
 
 interface VisitorsTableProps {
   page: StoreVisitorsPage;
@@ -40,6 +44,9 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
                 Visitas
               </th>
               <th scope="col" className="px-4 py-3 font-medium">
+                Dias e horários
+              </th>
+              <th scope="col" className="px-4 py-3 font-medium">
                 Última conexão
               </th>
               <th scope="col" className="px-4 py-3 font-medium">
@@ -62,6 +69,9 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
                 <td className="px-4 py-3 text-ink-600">{visitor.email}</td>
                 <td className="px-4 py-3 text-right tabular-nums">
                   {formatNumber(visitor.visits)}
+                </td>
+                <td className="px-4 py-3">
+                  <VisitTimes times={visitor.visitTimes} />
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-ink-600">
                   {formatDateTime(visitor.lastConnectedAt)}
@@ -107,6 +117,39 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
           </button>
         </div>
       </nav>
+    </div>
+  );
+}
+
+// lista numerada das visitas (1ª, 2ª...), com a data completa no tooltip
+function VisitTimes({ times }: { times: string[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const visible = expanded ? times : times.slice(0, VISIT_TIMES_PREVIEW);
+  const hidden = times.length - visible.length;
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <ol className="contents">
+        {visible.map((iso, index) => (
+          <li
+            key={iso}
+            title={formatDateTime(iso)}
+            className="rounded bg-brand-50 px-2 py-0.5 text-xs whitespace-nowrap text-ink-700"
+          >
+            <span className="text-ink-400">{index + 1}ª</span> {formatWeekdayTime(iso)}
+          </li>
+        ))}
+      </ol>
+      {times.length > VISIT_TIMES_PREVIEW && (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={() => setExpanded(!expanded)}
+          className="rounded px-1.5 py-0.5 text-xs font-medium text-brand-500 hover:underline"
+        >
+          {expanded ? 'ver menos' : `+${hidden}`}
+        </button>
+      )}
     </div>
   );
 }

@@ -71,6 +71,7 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
         cpf,
         email: last.visitor.email,
         visits: connections.length,
+        visitTimes: connections.map((c) => c.connectedAt).sort((a, b) => a.getTime() - b.getTime()),
         lastConnectedAt: last.connectedAt,
         lastDevice: {
           macAddress: last.device.macAddress,

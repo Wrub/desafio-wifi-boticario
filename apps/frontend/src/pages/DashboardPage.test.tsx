@@ -35,6 +35,12 @@ const visitorsPage: StoreVisitorsPage = {
       maskedCpf: '***.982.247-**',
       email: 'maria@email.com',
       visits: 3,
+      visitTimes: [
+        '2026-10-01T10:00:00.000Z',
+        '2026-10-02T12:15:00.000Z',
+        '2026-10-04T13:45:00.000Z',
+        '2026-10-05T18:30:00.000Z',
+      ],
       lastConnectedAt: '2026-10-05T18:30:00.000Z',
       lastDevice: { macAddress: 'AA:BB:CC:DD:EE:FF', type: 'smartphone', os: 'iOS 18' },
     },
@@ -270,6 +276,22 @@ describe('DashboardPage: loja selecionada', () => {
     expect(daysBetween(lastQuery)).toBeLessThan(7);
     expect(lastQuery.page).toBe(1);
     expect(api.listStores).toHaveBeenCalledTimes(storesCalls);
+  });
+
+  it('mostra o dia e horário de cada visita, com "+N" pras que sobram', async () => {
+    renderStorePage(fakeApi());
+    await screen.findByText('Maria Souza');
+
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual([
+      expect.stringMatching(/^1ª (domingo|segunda|terça|quarta|quinta|sexta|sábado) \d{2}:\d{2}$/),
+      expect.stringMatching(/^2ª /),
+      expect.stringMatching(/^3ª /),
+    ]);
+
+    await userEvent.click(screen.getByRole('button', { name: '+1' }));
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(4);
+    expect(screen.getByRole('button', { name: 'ver menos' })).toBeInTheDocument();
   });
 
   it('avisa quando a busca de visitante não acha ninguém', async () => {

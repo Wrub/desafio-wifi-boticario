@@ -111,7 +111,8 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
 
     // $1 loja, $2/$3 período, $4 busca (null = sem filtro)
     const matchingVisits = `
-      SELECT c.visitor_id, COUNT(*) AS visits, MAX(c.connected_at) AS last_connected_at
+      SELECT c.visitor_id, COUNT(*) AS visits, MAX(c.connected_at) AS last_connected_at,
+             ARRAY_AGG(c.connected_at ORDER BY c.connected_at) AS visit_times
       FROM wifi_connections c
       JOIN visitors v ON v.id = c.visitor_id
       WHERE c.store_id = $1 AND c.connected_at BETWEEN $2 AND $3
@@ -130,14 +131,15 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
       cpf: string;
       email: string;
       visits: string;
+      visit_times: Array<Date | string>;
       last_connected_at: Date;
       mac_address: string;
       device_type: DeviceType;
       device_os: string | null;
     }> = await this.dataSource.query(
       `WITH visits AS (${matchingVisits})
-       SELECT v.id AS visitor_id, v.name, v.cpf, v.email, vi.visits, vi.last_connected_at,
-              last.mac_address, last.device_type, last.device_os
+       SELECT v.id AS visitor_id, v.name, v.cpf, v.email, vi.visits, vi.visit_times,
+              vi.last_connected_at, last.mac_address, last.device_type, last.device_os
        FROM visits vi
        JOIN visitors v ON v.id = vi.visitor_id
        JOIN LATERAL (
@@ -161,6 +163,7 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
         cpf: row.cpf,
         email: row.email,
         visits: Number(row.visits),
+        visitTimes: row.visit_times.map((time) => new Date(time)),
         lastConnectedAt: new Date(row.last_connected_at),
         lastDevice: {
           macAddress: row.mac_address,

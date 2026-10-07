@@ -60,6 +60,18 @@ describe('ListStoreVisitors', () => {
     expect(result.items[1].name).toBe('João');
   });
 
+  it('devolve o horário de cada visita, da primeira pra última', async () => {
+    const result = await useCase.execute(
+      { ...october, storeId: 'loja-centro' },
+      { page: 1, pageSize: 10 },
+    );
+
+    expect(result.items[0].visitTimes).toEqual([
+      new Date('2026-10-02T10:00:00Z'),
+      new Date('2026-10-05T18:00:00Z'),
+    ]);
+  });
+
   it('nunca devolve o CPF completo', async () => {
     const result = await useCase.execute(
       { ...october, storeId: 'loja-centro' },
