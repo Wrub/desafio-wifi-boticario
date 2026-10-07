@@ -17,7 +17,6 @@ export class VisitorOrmEntity {
   phone: string;
 
   // opcional e sem unique: a pessoa pode trocar de número e manter o CPF
-  // TODO: criptografar em repouso (LGPD). Por enquanto só não sai da API sem máscara.
   @Index('idx_visitors_cpf')
   @Column({ type: 'char', length: 11, nullable: true })
   cpf: string | null;

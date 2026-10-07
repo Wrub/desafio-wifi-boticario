@@ -39,7 +39,6 @@ export class ConnectionRegisteredConsumer {
         return;
       }
       // provavelmente o banco caiu: espero um pouco e devolvo pra fila
-      // TODO: dead-letter queue com limite de tentativas
       this.logger.error(`Falha ao salvar conexão ${event.id}, voltando pra fila`, error);
       await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
       channel.nack(message, false, true);
