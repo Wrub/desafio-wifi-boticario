@@ -194,6 +194,18 @@ describe('DashboardPage: loja selecionada', () => {
     expect(window.history.length).toBe(historyLength);
   });
 
+  it('no celular dá pra trocar de loja pela faixa acima da tabela', async () => {
+    renderStorePage(fakeApi());
+    const strip = await screen.findByRole('navigation', { name: 'Trocar de loja' });
+
+    expect(within(strip).getByRole('button', { name: /Loja Centro/ })).toBeDisabled();
+
+    await userEvent.click(within(strip).getByRole('button', { name: /Orla/ }));
+
+    expect(screen.getByRole('tabpanel', { name: 'Orla' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/lojas/loja-orla');
+  });
+
   it('dá pra trocar de loja com as setas do teclado', async () => {
     renderStorePage(fakeApi());
     const first = await screen.findByRole('tab', { name: /Loja Centro/ });

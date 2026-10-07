@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { StoreSummary } from '@wifi/contracts';
 import { useDashboardApi } from '../api/api-context';
 import { MAX_PERIOD, periodToRange, type Period } from '../hooks/period';
@@ -16,9 +16,11 @@ const PAGE_SIZE = 10;
 interface StoreDetailsProps {
   store: StoreSummary;
   onClose: () => void;
+  // troca de loja que aparece só no celular, logo acima da tabela
+  mobileStoreSwitcher?: ReactNode;
 }
 
-export function StoreDetails({ store, onClose }: StoreDetailsProps) {
+export function StoreDetails({ store, onClose, mobileStoreSwitcher }: StoreDetailsProps) {
   const api = useDashboardApi();
   const [period, setPeriod] = useState<Period>(MAX_PERIOD);
   const [search, setSearch] = useState('');
@@ -76,6 +78,8 @@ export function StoreDetails({ store, onClose }: StoreDetailsProps) {
           hint="Quanto o cliente volta, em média"
         />
       </div>
+
+      {mobileStoreSwitcher && <div className="lg:hidden">{mobileStoreSwitcher}</div>}
 
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">

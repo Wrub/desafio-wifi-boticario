@@ -4,6 +4,7 @@ import { ErrorState } from '../components/ErrorState';
 import { KpiCard, KpiCardSkeleton } from '../components/KpiCard';
 import { StoreDetails } from '../components/StoreDetails';
 import { StoreGrid, StoreGridSkeleton } from '../components/StoreGrid';
+import { StoreStrip } from '../components/StoreStrip';
 import { StoreTabs, StoreTabsSkeleton } from '../components/StoreTabs';
 import { MAX_PERIOD, periodToRange } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
@@ -88,7 +89,7 @@ export function DashboardPage() {
           )
         ) : (
           <div className="grid gap-6 lg:grid-cols-[18rem_1fr] lg:items-start">
-            <aside aria-label="Lojas" className="space-y-3 lg:sticky lg:top-6">
+            <aside aria-label="Lojas" className="hidden space-y-3 lg:sticky lg:top-6 lg:block">
               <h2 className="text-sm font-semibold tracking-wide text-ink-500 uppercase">Lojas</h2>
               {stores.data ? (
                 <StoreTabs
@@ -108,6 +109,15 @@ export function DashboardPage() {
                   key={selectedStore.id}
                   store={selectedStore}
                   onClose={() => navigate(null)}
+                  mobileStoreSwitcher={
+                    stores.data && (
+                      <StoreStrip
+                        stores={stores.data}
+                        selectedId={selectedStore.id}
+                        onSelect={selectStore}
+                      />
+                    )
+                  }
                 />
               ) : storeNotFound ? (
                 <div className="rounded-md border border-dashed border-gray-300 p-6 text-center text-sm text-ink-500">
