@@ -26,6 +26,13 @@ describe('generateDemoConnections', () => {
     expect(again.map((c) => c.id)).toEqual(connections.map((c) => c.id));
   });
 
+  it('espalha as conexões pelo último ano, dentro do limite de 366 dias da API', () => {
+    const daysAgo = connections.map((c) => (now.getTime() - c.connectedAt.getTime()) / 86_400_000);
+    expect(Math.max(...daysAgo)).toBeGreaterThan(300);
+    expect(Math.max(...daysAgo)).toBeLessThan(366);
+    expect(Math.min(...daysAgo)).toBeGreaterThanOrEqual(0);
+  });
+
   it('não gera ids repetidos', () => {
     expect(new Set(connections.map((c) => c.id)).size).toBe(connections.length);
   });

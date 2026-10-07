@@ -44,7 +44,7 @@ services:
       DB_SYNC: "true"
       SEED_STORES: "true"
       SEED_CONNECTIONS: "true"
-      SEED_CONNECTIONS_COUNT: 1500
+      SEED_CONNECTIONS_COUNT: 6000
       RABBITMQ_URL: amqp://wifi:wifi@rabbitmq:5672
       FRONTEND_URL: http://localhost:8080,http://localhost:5173
     ports:

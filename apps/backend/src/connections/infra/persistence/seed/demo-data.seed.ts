@@ -28,7 +28,7 @@ export class DemoDataSeed implements OnApplicationBootstrap {
       await this.seedStores();
     }
     if (this.config.get('SEED_CONNECTIONS') === 'true') {
-      await this.seedConnections(Number(this.config.get('SEED_CONNECTIONS_COUNT', 1500)));
+      await this.seedConnections(Number(this.config.get('SEED_CONNECTIONS_COUNT', 6000)));
     }
   }
 

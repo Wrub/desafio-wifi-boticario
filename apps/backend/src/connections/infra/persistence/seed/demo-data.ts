@@ -166,7 +166,8 @@ function person(random: Random): Person {
 
 export function generateDemoConnections(
   count: number,
-  { now = new Date(), daysBack = 30, seed = 2026 } = {},
+  // 1 ano de dado pra visão padrão do dashboard (12 meses) mostrar algo diferente de 30 dias
+  { now = new Date(), daysBack = 365, seed = 2026 } = {},
 ): WifiConnectionProps[] {
   const random = createRandom(seed);
   // ~35% de pessoas em relação às conexões: dá bastante cliente que volta
