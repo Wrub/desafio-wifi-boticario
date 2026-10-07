@@ -1,12 +1,12 @@
 # Desafio Fullstack Wi-fi Grupo Boticario
 
-Dashboard para o dono de lojas O Boticário acompanhar o uso do Wi-Fi de visitantes.
+Dashboard destinado ao proprietário de lojas O Boticário, para o acompanhamento do uso da rede Wi-Fi de visitantes.
 
-## Como rodar
+## Execução do projeto
 
-Precisa do [Docker Desktop](https://www.docker.com/products/docker-desktop/) aberto.
+A execução requer o [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e em funcionamento.
 
-1. Clone o repositório e suba tudo:
+1. Para clonar o repositório e iniciar a aplicação, são utilizados os comandos a seguir:
 
    ```bash
    git clone https://github.com/Wrub/desafio-wifi-boticario.git
@@ -14,19 +14,19 @@ Precisa do [Docker Desktop](https://www.docker.com/products/docker-desktop/) abe
    docker compose up -d --build
    ```
 
-2. Abra http://localhost:8080. O banco já vem com lojas e conexões de exemplo.
+2. Após a inicialização, o dashboard fica disponível em http://localhost:8080. O banco de dados já é iniciado com lojas e conexões de exemplo.
 
-3. (Opcional) Gere mais conexões:
+3. Opcionalmente, novas conexões podem ser geradas pelo simulador:
 
    ```bash
    docker compose exec backend node scripts/simulate-connections.mjs 200
    ```
 
-Para parar, use `docker compose down`. Para apagar os dados também, `docker compose down -v`.
+A aplicação é encerrada com `docker compose down`. Para remover também os dados, utiliza-se `docker compose down -v`.
 
 ## Testes
 
-Precisa do [Node.js 22+](https://nodejs.org/).
+A execução dos testes requer o [Node.js 22+](https://nodejs.org/):
 
 ```bash
 npm install
