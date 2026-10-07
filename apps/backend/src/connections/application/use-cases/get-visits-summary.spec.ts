@@ -1,11 +1,17 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { connection, CPF_JOAO, CPF_MARIA } from '../../../../test/fakes/builders.js';
+import {
+  connection,
+  CPF_JOAO,
+  CPF_MARIA,
+  PHONE_JOAO,
+  PHONE_MARIA,
+} from '../../../../test/fakes/builders.js';
 import { InMemoryConnectionRepository } from '../../../../test/fakes/in-memory-connection.repository.js';
 import { DomainError } from '../../domain/domain.error.js';
 import { GetVisitsSummary } from './get-visits-summary.js';
 
-const maria = { name: 'Maria', cpf: CPF_MARIA, email: 'maria@email.com' };
-const joao = { name: 'João', cpf: CPF_JOAO, email: 'joao@email.com' };
+const maria = { name: 'Maria', phone: PHONE_MARIA, cpf: CPF_MARIA, email: 'maria@email.com' };
+const joao = { name: 'João', phone: PHONE_JOAO, cpf: CPF_JOAO, email: 'joao@email.com' };
 const october = { from: new Date('2026-10-01T00:00:00Z'), to: new Date('2026-10-07T23:59:59Z') };
 
 describe('GetVisitsSummary', () => {

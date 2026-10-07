@@ -17,8 +17,14 @@ describe('generateDemoConnections', () => {
   });
 
   it('tem cliente que volta (menos pessoas do que conexões)', () => {
-    const people = new Set(connections.map((c) => c.visitor.cpf));
+    const people = new Set(connections.map((c) => c.visitor.phone));
     expect(people.size).toBeLessThan(connections.length);
+  });
+
+  it('parte das pessoas não informa CPF', () => {
+    const withoutCpf = connections.filter((c) => !c.visitor.cpf);
+    expect(withoutCpf.length).toBeGreaterThan(0);
+    expect(withoutCpf.length).toBeLessThan(connections.length);
   });
 
   it('gera sempre os mesmos dados (semente fixa)', () => {

@@ -69,7 +69,7 @@ export function StoreDetails({ store, onClose, mobileStoreSwitcher }: StoreDetai
         <KpiCard
           label="Visitantes únicos"
           value={store.uniqueVisitors}
-          hint="Pessoas diferentes (por CPF)"
+          hint="Pessoas diferentes (por celular)"
         />
         <KpiCard
           label="Visitas por pessoa"

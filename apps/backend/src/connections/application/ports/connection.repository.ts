@@ -34,7 +34,8 @@ export interface StoreVisitorsFilter extends MetricsPeriod {
 export interface StoreVisitorRow {
   visitorId: string;
   name: string;
-  cpf: string;
+  phone: string;
+  cpf: string | null;
   email: string;
   visits: number;
   visitTimes: Date[];

@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { FakeConnectionEventPublisher } from '../../../../test/fakes/fake-connection-event.publisher.js';
 import { InMemoryConnectionRepository } from '../../../../test/fakes/in-memory-connection.repository.js';
-import { CPF_MARIA } from '../../../../test/fakes/builders.js';
+import { CPF_MARIA, PHONE_MARIA } from '../../../../test/fakes/builders.js';
 import { InvalidConnectionError } from '../../domain/domain.error.js';
 import { RequestConnectionRegistration } from './request-connection-registration.js';
 
 const input = {
   storeId: 'loja-centro',
   device: { macAddress: 'aa:bb:cc:dd:ee:ff', type: 'smartphone' },
-  visitor: { name: 'Maria Souza', cpf: CPF_MARIA, email: 'maria@email.com' },
+  visitor: { name: 'Maria Souza', phone: PHONE_MARIA, cpf: CPF_MARIA, email: 'maria@email.com' },
 };
 
 describe('RequestConnectionRegistration', () => {

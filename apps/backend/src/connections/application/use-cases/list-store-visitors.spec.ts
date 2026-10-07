@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { connection, CPF_ANA, CPF_JOAO, CPF_MARIA } from '../../../../test/fakes/builders.js';
+import {
+  connection,
+  CPF_ANA,
+  CPF_MARIA,
+  PHONE_ANA,
+  PHONE_JOAO,
+  PHONE_MARIA,
+} from '../../../../test/fakes/builders.js';
 import { InMemoryConnectionRepository } from '../../../../test/fakes/in-memory-connection.repository.js';
 import { NotFoundError } from '../../domain/domain.error.js';
 import { ListStoreVisitors } from './list-store-visitors.js';
@@ -14,11 +21,16 @@ describe('ListStoreVisitors', () => {
       { id: 'loja-centro', name: 'Centro', city: 'Curitiba' },
       { id: 'loja-batel', name: 'Batel', city: 'Curitiba' },
     ]);
-    const maria = { name: 'Maria', cpf: CPF_MARIA, email: 'maria@email.com' };
+    const maria = { name: 'Maria', phone: PHONE_MARIA, email: 'maria@email.com' };
 
     await connections.save(
-      connection({ id: '1', visitor: maria, connectedAt: new Date('2026-10-02T10:00:00Z') }),
+      connection({
+        id: '1',
+        visitor: { ...maria, cpf: CPF_MARIA },
+        connectedAt: new Date('2026-10-02T10:00:00Z'),
+      }),
     );
+    // Maria volta sem informar o CPF
     await connections.save(
       connection({
         id: '2',
@@ -30,7 +42,7 @@ describe('ListStoreVisitors', () => {
     await connections.save(
       connection({
         id: '3',
-        visitor: { name: 'João', cpf: CPF_JOAO, email: 'joao@email.com' },
+        visitor: { name: 'João', phone: PHONE_JOAO, email: 'joao@email.com' },
         connectedAt: new Date('2026-10-03T12:00:00Z'),
       }),
     );
@@ -38,7 +50,7 @@ describe('ListStoreVisitors', () => {
       connection({
         id: '4',
         storeId: 'loja-batel',
-        visitor: { name: 'Ana', cpf: CPF_ANA, email: 'ana@email.com' },
+        visitor: { name: 'Ana', phone: PHONE_ANA, cpf: CPF_ANA, email: 'ana@email.com' },
       }),
     );
 
@@ -80,6 +92,16 @@ describe('ListStoreVisitors', () => {
 
     expect(result.items[0].maskedCpf).toBe('***.982.247-**');
     expect(JSON.stringify(result)).not.toContain(CPF_MARIA);
+  });
+
+  it('devolve o celular, mantém o último CPF informado e null pra quem não informou', async () => {
+    const result = await useCase.execute(
+      { ...october, storeId: 'loja-centro' },
+      { page: 1, pageSize: 10 },
+    );
+
+    expect(result.items[0]).toMatchObject({ phone: PHONE_MARIA, maskedCpf: '***.982.247-**' });
+    expect(result.items[1]).toMatchObject({ phone: PHONE_JOAO, maskedCpf: null });
   });
 
   it('pagina o resultado', async () => {

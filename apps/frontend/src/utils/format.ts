@@ -20,6 +20,12 @@ export function formatWeekdayTime(iso: string): string {
   return format(new Date(iso), 'EEE HH:mm', { locale: ptBR });
 }
 
+// "+5541999998888" -> "(41) 99999-8888"
+export function formatPhone(e164: string): string {
+  const digits = e164.replace(/^\+55/, '');
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 export function normalizeText(text: string): string {
   return text
     .normalize('NFD')

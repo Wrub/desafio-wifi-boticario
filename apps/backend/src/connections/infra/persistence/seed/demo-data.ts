@@ -121,6 +121,14 @@ function cpf(random: Random): string {
   return digits.join('');
 }
 
+// DDDs das cidades das lojas
+const AREA_CODES = ['41', '11', '21', '48'];
+
+function phone(random: Random): string {
+  const rest = Array.from({ length: 8 }, () => random.int(10)).join('');
+  return `+55${random.pick(AREA_CODES)}9${rest}`;
+}
+
 function mac(random: Random): string {
   return Array.from({ length: 6 }, () => random.int(256).toString(16).padStart(2, '0')).join(':');
 }
@@ -155,7 +163,9 @@ function person(random: Random): Person {
   return {
     visitor: {
       name: `${first} ${last}`,
-      cpf: cpf(random),
+      phone: phone(random),
+      // CPF é opcional no portal: ~60% das pessoas informam
+      cpf: random.next() < 0.6 ? cpf(random) : undefined,
       email: `${slug}${random.int(100)}@email.com`,
     },
     // 1 em cada 4 pessoas usa mais de um aparelho (celular + notebook, por ex.)

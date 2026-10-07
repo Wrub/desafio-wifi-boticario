@@ -47,7 +47,6 @@ export function DashboardPage() {
       <header className="bg-ink-900">
         <div className="mx-auto max-w-7xl px-4 py-5">
           <h1 className="text-xl font-semibold text-white">Wi-Fi de visitantes</h1>
-          <p className="text-sm text-white/70">Como os clientes usam o Wi-Fi das lojas</p>
         </div>
       </header>
 
@@ -60,11 +59,7 @@ export function DashboardPage() {
                 value={summary.data.totalVisits}
                 hint="Todas as lojas"
               />
-              <KpiCard
-                label="Visitantes únicos na rede"
-                value={summary.data.uniqueVisitors}
-                hint="Quem visitou mais de uma loja conta uma vez"
-              />
+              <KpiCard label="Visitantes únicos na rede" value={summary.data.uniqueVisitors} />
             </>
           ) : summary.error ? (
             <div className="sm:col-span-2">

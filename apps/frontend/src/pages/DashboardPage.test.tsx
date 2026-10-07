@@ -32,6 +32,7 @@ const visitorsPage: StoreVisitorsPage = {
     {
       id: '6f1c2b8e-3d4a-4b5c-9e7f-1a2b3c4d5e6f',
       name: 'Maria Souza',
+      phone: '+5541999998888',
       maskedCpf: '***.982.247-**',
       email: 'maria@email.com',
       visits: 3,
@@ -108,7 +109,7 @@ describe('DashboardPage: grade de lojas', () => {
     expect(perPersonCard).toHaveTextContent('2,7'); // 80 / 30
     expect(await within(panel).findByText('Maria Souza')).toBeInTheDocument();
     expect(within(panel).getByText('***.982.247-**')).toBeInTheDocument();
-    expect(within(panel).getByText('Celular')).toBeInTheDocument();
+    expect(within(panel).getByRole('cell', { name: /Celular/ })).toBeInTheDocument();
     expect(screen.getAllByRole('tab')).toHaveLength(3);
     expect(window.location.pathname).toBe('/lojas/loja-shopping');
   });
@@ -304,6 +305,19 @@ describe('DashboardPage: loja selecionada', () => {
 
     expect(screen.getAllByRole('listitem')).toHaveLength(4);
     expect(screen.getByRole('button', { name: 'ver menos' })).toBeInTheDocument();
+  });
+
+  it('mostra o celular sem máscara e "—" pra quem não informou CPF', async () => {
+    const semCpf = { ...visitorsPage.items[0], maskedCpf: null };
+    renderStorePage(
+      fakeApi({
+        listStoreVisitors: vi.fn().mockResolvedValue({ ...visitorsPage, items: [semCpf] }),
+      }),
+    );
+
+    const row = (await screen.findByText('Maria Souza')).closest('tr')!;
+    expect(row).toHaveTextContent('(41) 99999-8888');
+    expect(within(row).getByText('—')).toBeInTheDocument();
   });
 
   it('avisa quando a busca de visitante não acha ninguém', async () => {

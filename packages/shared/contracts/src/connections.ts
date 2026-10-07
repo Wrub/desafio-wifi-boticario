@@ -14,11 +14,17 @@ export const deviceSchema = z.object({
 });
 export type Device = z.infer<typeof deviceSchema>;
 
+// Celular BR: DDD + 9 dígitos começando com 9, com ou sem +55 e pontuação
+export const PHONE_REGEX = /^(\+?55\s?)?\(?[1-9]{2}\)?\s?9\d{4}[-\s]?\d{4}$/;
+
 // Dados que o cliente preenche no captive portal do Wi-Fi.
-// Aqui só valido o formato, o dígito verificador do CPF fica no domínio.
 export const visitorSchema = z.object({
   name: z.string().trim().min(2, 'Nome muito curto').max(120),
-  cpf: z.string().regex(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, 'CPF deve ter 11 dígitos'),
+  phone: z.string().trim().regex(PHONE_REGEX, 'Celular inválido, use DDD + 9 dígitos'),
+  cpf: z
+    .string()
+    .regex(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, 'CPF deve ter 11 dígitos')
+    .optional(),
   email: z.email('E-mail inválido').max(160),
 });
 export type Visitor = z.infer<typeof visitorSchema>;

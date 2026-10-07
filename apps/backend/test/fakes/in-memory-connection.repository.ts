@@ -15,7 +15,7 @@ type Store = { id: string; name: string; city: string };
 
 export class InMemoryConnectionRepository implements ConnectionRepository {
   readonly items = new Map<string, WifiConnection>();
-  // cpf -> id do visitante, igual a tabela visitors faz no banco
+  // celular -> id do visitante, igual a tabela visitors faz no banco
   private readonly visitorIds = new Map<string, string>();
 
   constructor(private readonly stores: Store[] = []) {}
@@ -47,7 +47,7 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
     );
     return {
       totalVisits: inPeriod.length,
-      uniqueVisitors: new Set(inPeriod.map((c) => c.visitor.cpf.digits)).size,
+      uniqueVisitors: new Set(inPeriod.map((c) => c.visitor.phone.e164)).size,
     };
   }
 
@@ -57,18 +57,24 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
   ): Promise<{ items: StoreVisitorRow[]; total: number }> {
     const byVisitor = new Map<string, WifiConnection[]>();
     for (const c of this.inPeriod(period).filter((c) => c.storeId === storeId)) {
-      const list = byVisitor.get(c.visitor.cpf.digits) ?? [];
+      const list = byVisitor.get(c.visitor.phone.e164) ?? [];
       list.push(c);
-      byVisitor.set(c.visitor.cpf.digits, list);
+      byVisitor.set(c.visitor.phone.e164, list);
     }
 
     const term = search?.toLowerCase();
-    const rows: StoreVisitorRow[] = [...byVisitor.entries()].map(([cpf, connections]) => {
+    const rows: StoreVisitorRow[] = [...byVisitor.entries()].map(([phone, connections]) => {
       const last = connections.reduce((a, b) => (a.connectedAt > b.connectedAt ? a : b));
+      const withCpf = connections.filter((c) => c.visitor.cpf);
+      const lastCpf = withCpf.reduce<WifiConnection | undefined>(
+        (a, b) => (a && a.connectedAt > b.connectedAt ? a : b),
+        undefined,
+      );
       return {
-        visitorId: this.visitorIdOf(cpf),
+        visitorId: this.visitorIdOf(phone),
         name: last.visitor.name,
-        cpf,
+        phone,
+        cpf: lastCpf?.visitor.cpf?.digits ?? null,
         email: last.visitor.email,
         visits: connections.length,
         visitTimes: connections.map((c) => c.connectedAt).sort((a, b) => a.getTime() - b.getTime()),
@@ -89,9 +95,9 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
     return { items: matching.slice(start, start + pageSize), total: matching.length };
   }
 
-  private visitorIdOf(cpf: string): string {
-    if (!this.visitorIds.has(cpf)) this.visitorIds.set(cpf, randomUUID());
-    return this.visitorIds.get(cpf)!;
+  private visitorIdOf(phone: string): string {
+    if (!this.visitorIds.has(phone)) this.visitorIds.set(phone, randomUUID());
+    return this.visitorIds.get(phone)!;
   }
 
   private inPeriod({ from, to }: MetricsPeriod): WifiConnection[] {

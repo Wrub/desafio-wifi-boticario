@@ -20,7 +20,12 @@ describe('WifiConnection', () => {
   it('normaliza o e-mail do visitante', () => {
     const connection = WifiConnection.create(
       connectionProps({
-        visitor: { name: ' Maria ', cpf: '529.982.247-25', email: 'Maria@Email.com ' },
+        visitor: {
+          name: ' Maria ',
+          phone: '(41) 99999-8888',
+          cpf: '529.982.247-25',
+          email: 'Maria@Email.com ',
+        },
       }),
       now,
     );
@@ -49,10 +54,30 @@ describe('WifiConnection', () => {
   it('recusa CPF inválido', () => {
     expect(() =>
       WifiConnection.create(
-        connectionProps({ visitor: { name: 'Maria', cpf: '12345678900', email: 'm@m.com' } }),
+        connectionProps({
+          visitor: { name: 'Maria', phone: '41999998888', cpf: '12345678900', email: 'm@m.com' },
+        }),
         now,
       ),
     ).toThrow('CPF inválido');
+  });
+
+  it('recusa celular inválido', () => {
+    expect(() =>
+      WifiConnection.create(
+        connectionProps({ visitor: { name: 'Maria', phone: '4133334444', email: 'm@m.com' } }),
+        now,
+      ),
+    ).toThrow('celular inválido');
+  });
+
+  it('aceita visitante sem CPF e guarda o celular normalizado', () => {
+    const connection = WifiConnection.create(
+      connectionProps({ visitor: { name: 'Maria', phone: '(41) 99999-8888', email: 'm@m.com' } }),
+      now,
+    );
+    expect(connection.visitor.cpf).toBeNull();
+    expect(connection.visitor.phone.e164).toBe('+5541999998888');
   });
 
   it('recusa conexão no futuro', () => {

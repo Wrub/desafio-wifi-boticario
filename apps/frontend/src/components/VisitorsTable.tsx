@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import type { StoreVisitorsPage } from '@wifi/contracts';
-import { DEVICE_LABELS, formatDateTime, formatNumber, formatWeekdayTime } from '../utils/format';
+import {
+  DEVICE_LABELS,
+  formatDateTime,
+  formatNumber,
+  formatPhone,
+  formatWeekdayTime,
+} from '../utils/format';
 
 // quantas visitas aparecem antes do "+N"
 const VISIT_TIMES_PREVIEW = 3;
@@ -35,6 +41,9 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
                 Nome
               </th>
               <th scope="col" className="px-4 py-3 font-medium">
+                Celular
+              </th>
+              <th scope="col" className="px-4 py-3 font-medium">
                 CPF
               </th>
               <th scope="col" className="px-4 py-3 font-medium">
@@ -63,8 +72,11 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
                 <td className="px-4 py-3 font-medium whitespace-nowrap text-ink-900">
                   {visitor.name}
                 </td>
+                <td className="px-4 py-3 whitespace-nowrap text-ink-600 tabular-nums">
+                  {formatPhone(visitor.phone)}
+                </td>
                 <td className="px-4 py-3 font-mono text-xs whitespace-nowrap text-ink-600">
-                  {visitor.maskedCpf}
+                  {visitor.maskedCpf ?? '—'}
                 </td>
                 <td className="px-4 py-3 text-ink-600">{visitor.email}</td>
                 <td className="px-4 py-3 text-right tabular-nums">

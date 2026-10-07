@@ -1,16 +1,19 @@
 import { Cpf } from './cpf.js';
 import { InvalidConnectionError } from './domain.error.js';
+import { Phone } from './phone.js';
 
 export interface VisitorProps {
   name: string;
-  cpf: string;
+  phone: string;
+  cpf?: string;
   email: string;
 }
 
 export class Visitor {
   private constructor(
     readonly name: string,
-    readonly cpf: Cpf,
+    readonly phone: Phone,
+    readonly cpf: Cpf | null,
     readonly email: string,
   ) {}
 
@@ -23,6 +26,8 @@ export class Visitor {
     if (!email.includes('@')) {
       throw new InvalidConnectionError('e-mail inválido');
     }
-    return new Visitor(name, Cpf.create(props.cpf), email);
+    // CPF é opcional, mas se vier tem que ser válido
+    const cpf = props.cpf?.trim() ? Cpf.create(props.cpf) : null;
+    return new Visitor(name, Phone.create(props.phone), cpf, email);
   }
 }

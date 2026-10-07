@@ -56,14 +56,14 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
     const { visitor, device } = connection;
 
     await this.dataSource.transaction(async (manager) => {
-      // upsert pelo CPF: se a pessoa volta, atualizo nome/e-mail e reaproveito o id
       const [{ id: visitorId }] = await manager.query(
-        `INSERT INTO visitors (cpf, name, email)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (cpf) DO UPDATE
-           SET name = EXCLUDED.name, email = EXCLUDED.email, updated_at = now()
+        `INSERT INTO visitors (phone, cpf, name, email)
+         VALUES ($1, $2, $3, $4)
+         ON CONFLICT (phone) DO UPDATE
+           SET name = EXCLUDED.name, email = EXCLUDED.email,
+               cpf = COALESCE(EXCLUDED.cpf, visitors.cpf), updated_at = now()
          RETURNING id`,
-        [visitor.cpf.digits, visitor.name, visitor.email],
+        [visitor.phone.e164, visitor.cpf?.digits ?? null, visitor.name, visitor.email],
       );
 
       // ON CONFLICT DO NOTHING -> mensagem repetida da fila não duplica conexão
@@ -128,7 +128,8 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
     const rows: Array<{
       visitor_id: string;
       name: string;
-      cpf: string;
+      phone: string;
+      cpf: string | null;
       email: string;
       visits: string;
       visit_times: Array<Date | string>;
@@ -138,7 +139,7 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
       device_os: string | null;
     }> = await this.dataSource.query(
       `WITH visits AS (${matchingVisits})
-       SELECT v.id AS visitor_id, v.name, v.cpf, v.email, vi.visits, vi.visit_times,
+       SELECT v.id AS visitor_id, v.name, v.phone, v.cpf, v.email, vi.visits, vi.visit_times,
               vi.last_connected_at, last.mac_address, last.device_type, last.device_os
        FROM visits vi
        JOIN visitors v ON v.id = vi.visitor_id
@@ -160,6 +161,7 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
       items: rows.map((row) => ({
         visitorId: row.visitor_id,
         name: row.name,
+        phone: row.phone,
         cpf: row.cpf,
         email: row.email,
         visits: Number(row.visits),

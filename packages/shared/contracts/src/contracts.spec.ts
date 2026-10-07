@@ -4,12 +4,38 @@ import { registerConnectionSchema, storeVisitorsQuerySchema, visitsQuerySchema }
 const validPayload = {
   storeId: 'loja-centro',
   device: { macAddress: 'aa:bb:cc:dd:ee:ff', type: 'smartphone', os: 'Android 15' },
-  visitor: { name: 'Maria Souza', cpf: '529.982.247-25', email: 'maria@email.com' },
+  visitor: {
+    name: 'Maria Souza',
+    phone: '+55 (41) 99999-8888',
+    cpf: '529.982.247-25',
+    email: 'maria@email.com',
+  },
 };
 
 describe('registerConnectionSchema', () => {
   it('aceita um payload válido', () => {
     expect(registerConnectionSchema.safeParse(validPayload).success).toBe(true);
+  });
+
+  it('aceita visitante sem CPF', () => {
+    const { cpf: _cpf, ...visitor } = validPayload.visitor;
+    expect(registerConnectionSchema.safeParse({ ...validPayload, visitor }).success).toBe(true);
+  });
+
+  it.each(['41999998888', '5541999998888', '(41) 99999-8888'])('aceita o celular %s', (phone) => {
+    const result = registerConnectionSchema.safeParse({
+      ...validPayload,
+      visitor: { ...validPayload.visitor, phone },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it.each(['4133334444', '999998888', '(41) 89999-8888'])('recusa o celular %s', (phone) => {
+    const result = registerConnectionSchema.safeParse({
+      ...validPayload,
+      visitor: { ...validPayload.visitor, phone },
+    });
+    expect(result.success).toBe(false);
   });
 
   it('recusa MAC inválido', () => {

@@ -33,11 +33,12 @@ export type StoreVisitorsQueryInput = z.input<typeof storeVisitorsQuerySchema>;
 export const storeVisitorSchema = z.object({
   id: z.uuid(),
   name: z.string(),
-  // vem sempre mascarado da API
-  maskedCpf: z.string(),
+  // formato +5541999998888
+  phone: z.string(),
+  // sempre masked vindo da API, fica null quando não informado
+  maskedCpf: z.string().nullable(),
   email: z.string(),
   visits: z.number().int().positive(),
-  // horário de cada visita no período, da primeira pra última
   visitTimes: z.array(z.iso.datetime({ offset: true })),
   lastConnectedAt: z.iso.datetime({ offset: true }),
   lastDevice: z.object({

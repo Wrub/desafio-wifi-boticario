@@ -20,7 +20,12 @@ export class RabbitMqConnectionPublisher implements ConnectionEventPublisher {
       storeId: connection.storeId,
       connectedAt: connection.connectedAt.toISOString(),
       device: { macAddress: device.macAddress, type: device.type, os: device.os ?? undefined },
-      visitor: { name: visitor.name, cpf: visitor.cpf.digits, email: visitor.email },
+      visitor: {
+        name: visitor.name,
+        phone: visitor.phone.e164,
+        cpf: visitor.cpf?.digits,
+        email: visitor.email,
+      },
     };
 
     try {

@@ -17,7 +17,8 @@ const STORES = [
   ['loja-orla', 1],
 ];
 const PEOPLE_COUNT = Math.max(10, Math.round(count * 0.35));
-const DAYS_BACK = 30;
+const DAYS_BACK = 365;
+const AREA_CODES = ['41', '11', '21', '48'];
 const HOUR_WEIGHTS = [
   [10, 2],
   [11, 4],
@@ -102,6 +103,12 @@ function randomCpf() {
   return digits.join('');
 }
 
+// celular BR: DDD + 9 + 8 dígitos
+function randomPhone() {
+  const rest = Array.from({ length: 8 }, () => Math.floor(Math.random() * 10)).join('');
+  return `+55${pick(AREA_CODES)}9${rest}`;
+}
+
 function randomMac() {
   return Array.from({ length: 6 }, () =>
     Math.floor(Math.random() * 256)
@@ -130,7 +137,9 @@ function randomPerson() {
   return {
     visitor: {
       name: `${first} ${last}`,
-      cpf: randomCpf(),
+      phone: randomPhone(),
+      // CPF é opcional: ~60% informam
+      cpf: Math.random() < 0.6 ? randomCpf() : undefined,
       email: `${slug}${Math.floor(Math.random() * 100)}@email.com`,
     },
     devices: Array.from({ length: Math.random() < 0.25 ? 2 : 1 }, randomDevice),

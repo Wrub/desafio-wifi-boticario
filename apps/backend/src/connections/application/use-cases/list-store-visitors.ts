@@ -10,7 +10,7 @@ import { assertValidPeriod } from '../period.js';
 
 export type StoreVisitorView = Omit<StoreVisitorRow, 'cpf' | 'visitorId'> & {
   id: string;
-  maskedCpf: string;
+  maskedCpf: string | null;
 };
 
 export interface StoreVisitorsResult extends Pagination {
@@ -40,7 +40,7 @@ export class ListStoreVisitors {
       items: items.map(({ visitorId, cpf, ...rest }) => ({
         ...rest,
         id: visitorId,
-        maskedCpf: Cpf.mask(cpf),
+        maskedCpf: cpf ? Cpf.mask(cpf) : null,
       })),
     };
   }
