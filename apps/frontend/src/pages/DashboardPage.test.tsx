@@ -53,6 +53,7 @@ function fakeApi(overrides: Partial<DashboardApi> = {}): DashboardApi {
     getVisitsSummary: vi.fn().mockResolvedValue({ totalVisits: 500, uniqueVisitors: 210 }),
     listStores: vi.fn().mockResolvedValue(stores),
     listStoreVisitors: vi.fn().mockResolvedValue(visitorsPage),
+    registerConnection: vi.fn(),
     ...overrides,
   };
 }

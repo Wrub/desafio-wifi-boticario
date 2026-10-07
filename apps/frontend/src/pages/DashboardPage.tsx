@@ -45,8 +45,14 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen bg-zinc-100">
       <header className="bg-ink-900">
-        <div className="mx-auto max-w-7xl px-4 py-5">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5">
           <h1 className="text-xl font-semibold text-white">Wi-Fi de visitantes</h1>
+          <a
+            href="/portal"
+            className="rounded-md border border-white/30 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            Simular captive portal
+          </a>
         </div>
       </header>
 

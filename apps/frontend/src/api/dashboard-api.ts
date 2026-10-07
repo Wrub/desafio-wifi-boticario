@@ -1,9 +1,12 @@
 import {
   apiErrorSchema,
+  registerConnectionResponseSchema,
   storesResponseSchema,
   storeVisitorsPageSchema,
   visitsSummarySchema,
   type ApiError,
+  type RegisterConnectionRequest,
+  type RegisterConnectionResponse,
   type StoreSummary,
   type StoreVisitorsPage,
   type StoreVisitorsQueryInput,
@@ -23,6 +26,8 @@ export interface DashboardApi {
     query: StoreVisitorsQueryInput & Period,
     signal?: AbortSignal,
   ): Promise<StoreVisitorsPage>;
+  // usado pelo captive portal
+  registerConnection(body: RegisterConnectionRequest): Promise<RegisterConnectionResponse>;
 }
 
 export class ApiRequestError extends Error {
@@ -36,10 +41,15 @@ export class ApiRequestError extends Error {
   }
 }
 
-async function requestJson<T>(url: string, schema: ZodType<T>, signal?: AbortSignal): Promise<T> {
+async function requestJson<T>(
+  url: string,
+  schema: ZodType<T>,
+  signal?: AbortSignal,
+  init?: RequestInit,
+): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(url, { signal });
+    response = await fetch(url, { ...init, signal });
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error;
     throw new ApiRequestError('Não foi possível conectar ao servidor.');
@@ -91,6 +101,14 @@ export function createHttpDashboardApi(baseUrl: string): DashboardApi {
         storeVisitorsPageSchema,
         signal,
       );
+    },
+
+    registerConnection(body) {
+      return requestJson(`${baseUrl}/connections`, registerConnectionResponseSchema, undefined, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
     },
   };
 }
