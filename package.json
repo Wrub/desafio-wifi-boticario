@@ -1,0 +1,20 @@
+{
+  "name": "desafio-wifi-boticario",
+  "private": true,
+  "workspaces": [
+    "packages/shared/contracts",
+    "apps/backend",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "build:contracts": "npm run build -w @wifi/contracts",
+    "build": "npm run build:contracts && npm run build -w backend && npm run build -w frontend",
+    "test": "npm run build:contracts && npm test -w @wifi/contracts && npm test -w backend && npm test -w frontend",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "3.9.9",
+    "prettier-plugin-tailwindcss": "0.8.1"
+  }
+}

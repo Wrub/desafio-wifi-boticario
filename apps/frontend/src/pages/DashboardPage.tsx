@@ -1,0 +1,144 @@
+import { useEffect, useRef, useState } from 'react';
+import { useDashboardApi } from '../api/api-context';
+import { ErrorState } from '../components/ErrorState';
+import { KpiCard, KpiCardSkeleton } from '../components/KpiCard';
+import { PeriodSelector } from '../components/PeriodSelector';
+import { StoreDetails } from '../components/StoreDetails';
+import { StoreGrid, StoreGridSkeleton } from '../components/StoreGrid';
+import { StoreTabs, StoreTabsSkeleton } from '../components/StoreTabs';
+import { periodToRange, type Period } from '../hooks/period';
+import { useApiQuery } from '../hooks/use-api-query';
+import { useStoreRoute } from '../hooks/use-store-route';
+
+export function DashboardPage() {
+  const api = useDashboardApi();
+  const [period, setPeriod] = useState<Period>('7d');
+  const { storeId: routeStoreId, navigate } = useStoreRoute();
+  const detailsRef = useRef<HTMLDivElement>(null);
+
+  const summary = useApiQuery(
+    (signal) => api.getVisitsSummary(periodToRange(period), signal),
+    [api, period],
+  );
+  const stores = useApiQuery(
+    (signal) => api.listStores(periodToRange(period), signal),
+    [api, period],
+  );
+
+  const selectedStore = routeStoreId
+    ? stores.data?.find((store) => store.id === routeStoreId)
+    : undefined;
+  const storeNotFound = Boolean(routeStoreId && stores.data && !selectedStore);
+
+  useEffect(() => {
+    document.title = selectedStore ? `${selectedStore.name} · Wi-Fi das Lojas` : 'Wi-Fi das Lojas';
+  }, [selectedStore]);
+
+  useEffect(() => {
+    if (routeStoreId && window.matchMedia?.('(max-width: 1023px)').matches) {
+      detailsRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    }
+  }, [routeStoreId]);
+
+  function selectStore(storeId: string) {
+    if (storeId === selectedStore?.id) return;
+    navigate(storeId);
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-100">
+      <header className="bg-ink-900">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5">
+          <div>
+            <h1 className="text-xl font-semibold text-white">Wi-Fi de visitantes</h1>
+            <p className="text-sm text-white/70">Como os clientes usam o Wi-Fi das lojas</p>
+          </div>
+          <PeriodSelector value={period} onChange={setPeriod} />
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-7xl space-y-6 px-4 py-6">
+        <section aria-label="Todas as lojas" className="grid gap-4 sm:grid-cols-2">
+          {summary.data ? (
+            <>
+              <KpiCard
+                label="Visitas na rede"
+                value={summary.data.totalVisits}
+                hint="Todas as lojas"
+              />
+              <KpiCard
+                label="Visitantes únicos na rede"
+                value={summary.data.uniqueVisitors}
+                hint="Quem visitou mais de uma loja conta uma vez"
+              />
+            </>
+          ) : summary.error ? (
+            <div className="sm:col-span-2">
+              <ErrorState message={summary.error} onRetry={summary.retry} />
+            </div>
+          ) : (
+            <>
+              <KpiCardSkeleton />
+              <KpiCardSkeleton />
+            </>
+          )}
+        </section>
+
+        {stores.error ? (
+          <ErrorState message={stores.error} onRetry={stores.retry} />
+        ) : !routeStoreId ? (
+          // nenhuma loja selecionada: só a grade pra escolher
+          stores.data ? (
+            <StoreGrid stores={stores.data} onSelect={selectStore} loading={stores.loading} />
+          ) : (
+            <StoreGridSkeleton />
+          )
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-[18rem_1fr] lg:items-start">
+            <aside aria-label="Lojas" className="space-y-3 lg:sticky lg:top-6">
+              <h2 className="text-sm font-semibold tracking-wide text-ink-500 uppercase">Lojas</h2>
+              {stores.data ? (
+                <StoreTabs
+                  stores={stores.data}
+                  selectedId={selectedStore?.id}
+                  onSelect={selectStore}
+                  loading={stores.loading}
+                />
+              ) : (
+                <StoreTabsSkeleton />
+              )}
+            </aside>
+
+            <div ref={detailsRef} className="min-w-0 scroll-mt-4">
+              {selectedStore ? (
+                // key reinicia busca e paginação quando troca loja ou período
+                <StoreDetails
+                  key={`${selectedStore.id}-${period}`}
+                  store={selectedStore}
+                  period={period}
+                  onClose={() => navigate(null)}
+                />
+              ) : storeNotFound ? (
+                <div className="rounded-md border border-dashed border-gray-300 p-6 text-center text-sm text-ink-500">
+                  <p>
+                    Loja <span className="font-medium text-ink-900">"{routeStoreId}"</span> não
+                    encontrada.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate(null)}
+                    className="mt-3 rounded-md border border-gray-300 px-4 py-1.5 font-medium text-ink-700 hover:bg-canvas"
+                  >
+                    Ver todas as lojas
+                  </button>
+                </div>
+              ) : (
+                <div aria-hidden className="h-96 animate-pulse rounded-md bg-gray-200" />
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
