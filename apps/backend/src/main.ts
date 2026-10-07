@@ -15,14 +15,13 @@ async function bootstrap() {
   app.useGlobalFilters(new DomainErrorFilter());
   app.enableShutdownHooks();
 
-  // App híbrida: o mesmo processo atende HTTP e consome a fila do RabbitMQ
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [config.getOrThrow<string>('RABBITMQ_URL')],
       queue: WIFI_CONNECTIONS_QUEUE,
       queueOptions: { durable: true },
-      noAck: false, // ack manual, só depois de salvar
+      noAck: false,
       prefetchCount: 10,
     },
   });
@@ -30,6 +29,6 @@ async function bootstrap() {
   await app.startAllMicroservices();
   const port = Number(config.get('PORT', 3000));
   await app.listen(port, '0.0.0.0');
-  Logger.log(`API rodando na porta ${port}`, 'Bootstrap');
+  Logger.log(`API rodando na porta ${port}`);
 }
 await bootstrap();

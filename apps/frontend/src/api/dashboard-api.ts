@@ -14,8 +14,7 @@ import type { ZodType } from 'zod';
 
 type Period = { from: Date; to: Date };
 
-// Tudo que a tela precisa do backend. Os componentes dependem dessa interface
-// e não do fetch, assim no teste eu passo um fake.
+// todas chamadas de API do Dashboard
 export interface DashboardApi {
   getVisitsSummary(query: VisitsQuery, signal?: AbortSignal): Promise<VisitsSummary>;
   listStores(period: Period, signal?: AbortSignal): Promise<StoreSummary[]>;
@@ -57,7 +56,7 @@ async function requestJson<T>(url: string, schema: ZodType<T>, signal?: AbortSig
     );
   }
 
-  // se o backend mudar o formato sem atualizar o contrato, quebra aqui e não lá na tela
+  // parse para validar se a resposta está de acordo com o schema de contract
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     console.error('Resposta fora do contrato', parsed.error);

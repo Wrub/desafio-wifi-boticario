@@ -79,7 +79,6 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
         },
       };
     });
-    // mesma regra do ILIKE do Postgres: pedaço do nome ou do e-mail
     const matching = term
       ? rows.filter((r) => r.name.toLowerCase().includes(term) || r.email.includes(term))
       : rows;
