@@ -1,29 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDashboardApi } from '../api/api-context';
 import { ErrorState } from '../components/ErrorState';
 import { KpiCard, KpiCardSkeleton } from '../components/KpiCard';
-import { PeriodSelector } from '../components/PeriodSelector';
 import { StoreDetails } from '../components/StoreDetails';
 import { StoreGrid, StoreGridSkeleton } from '../components/StoreGrid';
 import { StoreTabs, StoreTabsSkeleton } from '../components/StoreTabs';
-import { periodToRange, type Period } from '../hooks/period';
+import { MAX_PERIOD, periodToRange } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
 import { useStoreRoute } from '../hooks/use-store-route';
 
 export function DashboardPage() {
   const api = useDashboardApi();
-  const [period, setPeriod] = useState<Period>('7d');
   const { storeId: routeStoreId, navigate } = useStoreRoute();
   const detailsRef = useRef<HTMLDivElement>(null);
 
+  // indicadores e lojas sempre no maior período, o filtro fica só na tabela de visitantes
   const summary = useApiQuery(
-    (signal) => api.getVisitsSummary(periodToRange(period), signal),
-    [api, period],
+    (signal) => api.getVisitsSummary(periodToRange(MAX_PERIOD), signal),
+    [api],
   );
-  const stores = useApiQuery(
-    (signal) => api.listStores(periodToRange(period), signal),
-    [api, period],
-  );
+  const stores = useApiQuery((signal) => api.listStores(periodToRange(MAX_PERIOD), signal), [api]);
 
   const selectedStore = routeStoreId
     ? stores.data?.find((store) => store.id === routeStoreId)
@@ -48,12 +44,9 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen bg-zinc-100">
       <header className="bg-ink-900">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5">
-          <div>
-            <h1 className="text-xl font-semibold text-white">Wi-Fi de visitantes</h1>
-            <p className="text-sm text-white/70">Como os clientes usam o Wi-Fi das lojas</p>
-          </div>
-          <PeriodSelector value={period} onChange={setPeriod} />
+        <div className="mx-auto max-w-7xl px-4 py-5">
+          <h1 className="text-xl font-semibold text-white">Wi-Fi de visitantes</h1>
+          <p className="text-sm text-white/70">Como os clientes usam o Wi-Fi das lojas</p>
         </div>
       </header>
 
@@ -112,9 +105,8 @@ export function DashboardPage() {
             <div ref={detailsRef} className="min-w-0 scroll-mt-4">
               {selectedStore ? (
                 <StoreDetails
-                  key={`${selectedStore.id}-${period}`}
+                  key={selectedStore.id}
                   store={selectedStore}
-                  period={period}
                   onClose={() => navigate(null)}
                 />
               ) : storeNotFound ? (

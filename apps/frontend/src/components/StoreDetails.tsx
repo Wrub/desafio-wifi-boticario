@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import type { StoreSummary } from '@wifi/contracts';
 import { useDashboardApi } from '../api/api-context';
-import { periodToRange, type Period } from '../hooks/period';
+import { MAX_PERIOD, periodToRange, type Period } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
 import { useDebouncedValue } from '../hooks/use-debounced-value';
 import { ErrorState } from './ErrorState';
 import { KpiCard } from './KpiCard';
+import { PeriodSelector } from './PeriodSelector';
 import { SearchInput } from './SearchInput';
 import { STORE_PANEL_ID } from './StoreTabs';
 import { TableSkeleton, VisitorsTable } from './VisitorsTable';
@@ -14,18 +15,20 @@ const PAGE_SIZE = 10;
 
 interface StoreDetailsProps {
   store: StoreSummary;
-  period: Period;
   onClose: () => void;
 }
 
-export function StoreDetails({ store, period, onClose }: StoreDetailsProps) {
+export function StoreDetails({ store, onClose }: StoreDetailsProps) {
   const api = useDashboardApi();
+  const [period, setPeriod] = useState<Period>(MAX_PERIOD);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search.trim());
 
-  const [pageState, setPageState] = useState({ search: '', page: 1 });
-  const page = pageState.search === debouncedSearch ? pageState.page : 1;
-  const setPage = (next: number) => setPageState({ search: debouncedSearch, page: next });
+  // trocar a busca ou o período volta pra primeira página
+  const [pageState, setPageState] = useState({ search: '', period: MAX_PERIOD, page: 1 });
+  const page =
+    pageState.search === debouncedSearch && pageState.period === period ? pageState.page : 1;
+  const setPage = (next: number) => setPageState({ search: debouncedSearch, period, page: next });
 
   const visitors = useApiQuery(
     (signal) =>
@@ -56,7 +59,11 @@ export function StoreDetails({ store, period, onClose }: StoreDetailsProps) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <KpiCard label="Visitas" value={store.totalVisits} hint="Conexões ao Wi-Fi no período" />
+        <KpiCard
+          label="Visitas"
+          value={store.totalVisits}
+          hint="Conexões ao Wi-Fi nos últimos 12 meses"
+        />
         <KpiCard
           label="Visitantes únicos"
           value={store.uniqueVisitors}
@@ -82,6 +89,7 @@ export function StoreDetails({ store, period, onClose }: StoreDetailsProps) {
             />
           </div>
         </div>
+        <PeriodSelector value={period} onChange={setPeriod} />
 
         {visitors.error && <ErrorState message={visitors.error} onRetry={visitors.retry} />}
         {!visitors.error && !visitors.data && <TableSkeleton />}

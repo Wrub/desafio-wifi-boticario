@@ -135,18 +135,20 @@ describe('DashboardPage: grade de lojas', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 
-  it('busca de novo com outro intervalo quando troca o período', async () => {
+  it('indicadores e lojas vêm sempre do maior período, sem filtro no topo', async () => {
     const api = fakeApi();
     renderPage(api);
     await screen.findByRole('button', { name: /Loja Centro/ });
 
-    await userEvent.click(screen.getByRole('button', { name: '30 dias' }));
-
-    const lastPeriod = vi.mocked(api.listStores).mock.lastCall?.[0];
-    const days = (lastPeriod!.to.getTime() - lastPeriod!.from.getTime()) / 86_400_000;
-    expect(days).toBeGreaterThan(28);
+    expect(screen.queryByRole('group', { name: 'Período' })).not.toBeInTheDocument();
+    const period = vi.mocked(api.listStores).mock.lastCall?.[0];
+    expect(daysBetween(period!)).toBeGreaterThan(364);
   });
 });
+
+function daysBetween({ from, to }: { from: Date; to: Date }) {
+  return (to.getTime() - from.getTime()) / 86_400_000;
+}
 
 describe('DashboardPage: loja selecionada', () => {
   it('abre direto a loja do link /lojas/<id>', async () => {
@@ -248,6 +250,26 @@ describe('DashboardPage: loja selecionada', () => {
         expect.any(AbortSignal),
       ),
     );
+  });
+
+  it('tabela de visitantes começa no maior período e o filtro só mexe nela', async () => {
+    const api = fakeApi();
+    renderStorePage(api);
+    await screen.findByText('Maria Souza');
+
+    expect(screen.getByRole('button', { name: '12 meses' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(daysBetween(vi.mocked(api.listStoreVisitors).mock.lastCall![1])).toBeGreaterThan(364);
+    const storesCalls = vi.mocked(api.listStores).mock.calls.length;
+
+    await userEvent.click(screen.getByRole('button', { name: '7 dias' }));
+
+    const lastQuery = vi.mocked(api.listStoreVisitors).mock.lastCall![1];
+    expect(daysBetween(lastQuery)).toBeLessThan(7);
+    expect(lastQuery.page).toBe(1);
+    expect(api.listStores).toHaveBeenCalledTimes(storesCalls);
   });
 
   it('avisa quando a busca de visitante não acha ninguém', async () => {
