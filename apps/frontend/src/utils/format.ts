@@ -13,7 +13,6 @@ export function formatDateTime(iso: string): string {
   return dateTime.format(new Date(iso));
 }
 
-// "São Paulo" e "sao paulo" viram a mesma coisa na busca
 export function normalizeText(text: string): string {
   return text
     .normalize('NFD')

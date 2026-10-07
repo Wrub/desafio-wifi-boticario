@@ -13,8 +13,6 @@ export function storeIdFromPath(pathname: string): string | undefined {
   try {
     return decodeURIComponent(match[1]);
   } catch {
-    // link com % quebrado (ex.: /lojas/%E0%A4%A) faz o decode lançar erro e derrubava a página;
-    // devolvo o trecho cru e a tela mostra "loja não encontrada"
     return match[1];
   }
 }

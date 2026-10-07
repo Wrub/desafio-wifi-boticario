@@ -8,7 +8,6 @@ export interface ApiQuery<T> {
   retry: () => void;
 }
 
-// Mantenho o dado anterior enquanto carrega, pra tabela não piscar ao trocar de página.
 export function useApiQuery<T>(
   fetcher: (signal: AbortSignal) => Promise<T>,
   deps: DependencyList,
@@ -19,7 +18,7 @@ export function useApiQuery<T>(
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    // abort evita mostrar resposta velha se o usuário trocar de filtro rápido
+    // abort para evitar mostrar resposta velha se o usuário trocar de filtro rápido
     const controller = new AbortController();
     setLoading(true);
     setError(undefined);

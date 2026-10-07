@@ -23,7 +23,6 @@ export function StoreDetails({ store, period, onClose }: StoreDetailsProps) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search.trim());
 
-  // a página fica "presa" à busca: mudou a busca, volta pra página 1 sem precisar de useEffect
   const [pageState, setPageState] = useState({ search: '', page: 1 });
   const page = pageState.search === debouncedSearch ? pageState.page : 1;
   const setPage = (next: number) => setPageState({ search: debouncedSearch, page: next });
@@ -38,7 +37,6 @@ export function StoreDetails({ store, period, onClose }: StoreDetailsProps) {
     [api, store.id, period, page, debouncedSearch],
   );
 
-  // os números dos cards já vêm junto da lista de lojas, não preciso de outra request
   const visitsPerVisitor = store.uniqueVisitors > 0 ? store.totalVisits / store.uniqueVisitors : 0;
 
   return (

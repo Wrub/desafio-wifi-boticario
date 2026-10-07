@@ -111,7 +111,6 @@ export function DashboardPage() {
 
             <div ref={detailsRef} className="min-w-0 scroll-mt-4">
               {selectedStore ? (
-                // key reinicia busca e paginação quando troca loja ou período
                 <StoreDetails
                   key={`${selectedStore.id}-${period}`}
                   store={selectedStore}

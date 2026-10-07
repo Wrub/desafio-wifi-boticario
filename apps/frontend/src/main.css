@@ -1,10 +1,7 @@
 @import 'tailwindcss';
 
 /*
-  Tema baseado no site do Grupo Boticário (grupoboticario.com.br):
-  azul-marinho como cor principal, laranja de destaque e fonte IBM Plex Sans.
-  Visual mais sóbrio: fundo cinza-azulado (branco puro cansa a vista), bordas cinza neutras
-  e cantos pouco arredondados.
+  Tema baseado no Grupo Boticário
 */
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
@@ -22,7 +19,6 @@
 
   --color-accent-500: #ff4d00;
 
-  /* fundo da página e dos cards: nada de #fff puro */
   --color-canvas: #eef1f5;
   --color-surface: #f8f9fb;
 }
