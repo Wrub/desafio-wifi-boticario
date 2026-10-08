@@ -5,10 +5,11 @@ import { assertValidPeriod } from '../period.js';
 export interface VisitsDistribution {
   byWeekday: Array<{ weekday: number; visits: number }>;
   byHour: Array<{ hour: number; visits: number }>;
+  byMonth: Array<{ month: number; visits: number }>;
   bySeason: Array<{ season: Season; visits: number }>;
 }
 
-// Quando as pessoas usam o Wi-Fi: visitas por dia da semana, hora e estação.
+// Quando as pessoas usam o Wi-Fi: visitas por dia da semana, hora, mês e estação.
 // Devolve todas as chaves, com 0 onde não teve visita, pra o gráfico não ter buraco.
 export class GetVisitsDistribution {
   constructor(private readonly repository: ConnectionRepository) {}
@@ -26,6 +27,7 @@ export class GetVisitsDistribution {
     return {
       byWeekday: range(7).map((weekday) => ({ weekday, visits: byWeekday.get(weekday) ?? 0 })),
       byHour: range(24).map((hour) => ({ hour, visits: byHour.get(hour) ?? 0 })),
+      byMonth: range(12).map((i) => ({ month: i + 1, visits: byMonth.get(i + 1) ?? 0 })),
       bySeason: SEASONS.map((season) => ({ season, visits: bySeason.get(season) ?? 0 })),
     };
   }

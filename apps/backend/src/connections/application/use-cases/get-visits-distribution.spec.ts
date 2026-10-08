@@ -20,6 +20,7 @@ describe('GetVisitsDistribution', () => {
 
     expect(result.byWeekday).toHaveLength(7);
     expect(result.byHour).toHaveLength(24);
+    expect(result.byMonth.map((m) => m.month)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     expect(result.bySeason.map((s) => s.season)).toEqual([
       'verao',
       'outono',
@@ -47,7 +48,10 @@ describe('GetVisitsDistribution', () => {
       );
     }
 
-    const { bySeason } = await useCase.execute(lastYear);
+    const { byMonth, bySeason } = await useCase.execute(lastYear);
+
+    expect(byMonth[0]).toEqual({ month: 1, visits: 1 });
+    expect(byMonth[11]).toEqual({ month: 12, visits: 1 });
 
     expect(bySeason).toEqual([
       { season: 'verao', visits: 3 },

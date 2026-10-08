@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { formatHour, maskCpfInput, maskPhoneInput, SEASON_LABELS, WEEKDAY_LABELS } from './format';
+import {
+  formatHour,
+  maskCpfInput,
+  maskPhoneInput,
+  MONTH_LABELS,
+  SEASON_LABELS,
+  WEEKDAY_LABELS,
+} from './format';
 
 describe('maskPhoneInput', () => {
   it.each([
@@ -41,6 +48,12 @@ describe('rótulos dos padrões de visita', () => {
   it('começa a semana no domingo, como a API', () => {
     expect(WEEKDAY_LABELS[0]).toBe('Domingo');
     expect(WEEKDAY_LABELS[6]).toBe('Sábado');
+  });
+
+  it('tem os 12 meses, começando em janeiro', () => {
+    expect(MONTH_LABELS).toHaveLength(12);
+    expect(MONTH_LABELS[0]).toBe('Janeiro');
+    expect(MONTH_LABELS[11]).toBe('Dezembro');
   });
 
   it('formata estação e hora', () => {

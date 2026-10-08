@@ -83,13 +83,14 @@ describe('visitsDistributionSchema', () => {
   const distribution = {
     byWeekday: Array.from({ length: 7 }, (_, weekday) => ({ weekday, visits: 0 })),
     byHour: Array.from({ length: 24 }, (_, hour) => ({ hour, visits: 0 })),
+    byMonth: Array.from({ length: 12 }, (_, i) => ({ month: i + 1, visits: 0 })),
     bySeason: (['verao', 'outono', 'inverno', 'primavera'] as const).map((season) => ({
       season,
       visits: 0,
     })),
   };
 
-  it('aceita os 7 dias, as 24 horas e as 4 estações', () => {
+  it('aceita os 7 dias, as 24 horas, os 12 meses e as 4 estações', () => {
     expect(visitsDistributionSchema.safeParse(distribution).success).toBe(true);
   });
 

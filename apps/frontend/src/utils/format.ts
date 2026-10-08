@@ -68,6 +68,22 @@ export const WEEKDAY_LABELS = [
   'Sábado',
 ];
 
+// índice = mês - 1 (a API devolve 1 = janeiro)
+export const MONTH_LABELS = [
+  'Janeiro',
+  'Fevereiro',
+  'Março',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
+];
+
 export const SEASON_LABELS: Record<Season, string> = {
   verao: 'Verão',
   outono: 'Outono',

@@ -12,17 +12,17 @@ Uma visita a loja é categorizada como um acesso ao Wi-Fi, passando por um supos
 
 ## Métricas escolhidas
 
-| Nível     | Métrica                                           |
-| --------- | ------------------------------------------------- |
-| Rede      | Visitas na rede                                   |
-| Rede      | Visitantes únicos na rede                         |
-| Loja      | Visitas                                           |
-| Loja      | Visitantes únicos                                 |
-| Loja      | Visitas por pessoa                                |
-| Rede      | Dia da semana, horário e estação com mais visitas |
-| Loja      | Dia da semana, horário e estação com mais visitas |
-| Visitante | Visitas, dias e horários de cada visita           |
-| Visitante | Último aparelho usado                             |
+| Nível     | Métrica                                                |
+| --------- | ------------------------------------------------------ |
+| Rede      | Visitas na rede                                        |
+| Rede      | Visitantes únicos na rede                              |
+| Loja      | Visitas                                                |
+| Loja      | Visitantes únicos                                      |
+| Loja      | Visitas por pessoa                                     |
+| Rede      | Dia da semana, horário, mês e estação com mais visitas |
+| Loja      | Dia da semana, horário, mês e estação com mais visitas |
+| Visitante | Visitas, dias e horários de cada visita                |
+| Visitante | Último aparelho usado                                  |
 
 ## Dados do visitante e LGPD
 

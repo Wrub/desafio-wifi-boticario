@@ -11,6 +11,7 @@ function distribution(
   weekdays: Record<number, number>,
   hours: Record<number, number>,
   seasons: Partial<Record<'verao' | 'outono' | 'inverno' | 'primavera', number>>,
+  months: Record<number, number> = {},
 ): VisitsDistribution {
   return {
     byWeekday: Array.from({ length: 7 }, (_, weekday) => ({
@@ -18,6 +19,7 @@ function distribution(
       visits: weekdays[weekday] ?? 0,
     })),
     byHour: Array.from({ length: 24 }, (_, hour) => ({ hour, visits: hours[hour] ?? 0 })),
+    byMonth: Array.from({ length: 12 }, (_, i) => ({ month: i + 1, visits: months[i + 1] ?? 0 })),
     bySeason: (['verao', 'outono', 'inverno', 'primavera'] as const).map((season) => ({
       season,
       visits: seasons[season] ?? 0,
@@ -62,6 +64,18 @@ describe('VisitPatterns', () => {
 
     const season = screen.getByRole('article', { name: 'Estação do ano' });
     expect(within(season).getByText('Verão', { selector: 'p' })).toBeInTheDocument();
+  });
+
+  it('destaca o mês com mais visitas e mostra os 12 meses com rótulo curto', async () => {
+    renderPatterns(
+      vi.fn().mockResolvedValue(distribution({ 6: 1 }, { 18: 1 }, { verao: 1 }, { 5: 30, 12: 45 })),
+    );
+
+    const month = await screen.findByRole('article', { name: 'Mês' });
+    expect(within(month).getByText('Dezembro', { selector: 'p' })).toBeInTheDocument();
+    expect(within(month).getAllByRole('listitem')).toHaveLength(12);
+    expect(within(month).getByText('Dez')).toBeInTheDocument();
+    expect(within(month).getByTitle('Maio: 30 visitas')).toBeInTheDocument();
   });
 
   it('mostra só as horas entre a primeira e a última com visita', async () => {

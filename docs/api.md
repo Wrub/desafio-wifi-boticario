@@ -13,14 +13,14 @@ Os formatos de entrada e saída estão definidos em `packages/shared/contracts/s
 
 ## Rotas
 
-| Método | Rota                           | Descrição                                 |
-| ------ | ------------------------------ | ----------------------------------------- |
-| POST   | `/connections`                 | registra uma conexão ao Wi-Fi             |
-| GET    | `/metrics/visits`              | total de visitas e visitantes únicos      |
-| GET    | `/metrics/visits/distribution` | visitas por dia da semana, hora e estação |
-| GET    | `/stores`                      | lojas com visitas e visitantes únicos     |
-| GET    | `/stores/:storeId/visitors`    | visitantes de uma loja, paginados         |
-| GET    | `/health`                      | verifica se a API e o banco estão no ar   |
+| Método | Rota                           | Descrição                                      |
+| ------ | ------------------------------ | ---------------------------------------------- |
+| POST   | `/connections`                 | registra uma conexão ao Wi-Fi                  |
+| GET    | `/metrics/visits`              | total de visitas e visitantes únicos           |
+| GET    | `/metrics/visits/distribution` | visitas por dia da semana, hora, mês e estação |
+| GET    | `/stores`                      | lojas com visitas e visitantes únicos          |
+| GET    | `/stores/:storeId/visitors`    | visitantes de uma loja, paginados              |
+| GET    | `/health`                      | verifica se a API e o banco estão no ar        |
 
 As rotas de consulta recebem o período em `from` e `to` (data ISO 8601). O período não pode passar de 366 dias, e `from` precisa ser menor ou igual a `to`.
 
@@ -91,7 +91,7 @@ curl "https://desafio-wifi-boticario-backend.onrender.com/metrics/visits?from=20
 | `to`      | sim         | fim do período      |
 | `storeId` | não         | filtra por uma loja |
 
-Conta as visitas no horário de Brasília. Sempre devolve os 7 dias da semana (`0` = domingo), as 24 horas e as 4 estações, com `0` onde não teve visita. As estações seguem o hemisfério sul pelo mês: verão de dezembro a fevereiro, outono de março a maio, inverno de junho a agosto e primavera de setembro a novembro.
+Conta as visitas no horário de Brasília. Sempre devolve os 7 dias da semana (`0` = domingo), as 24 horas, os 12 meses (`1` = janeiro) e as 4 estações, com `0` onde não teve visita. As estações seguem o hemisfério sul pelo mês: verão de dezembro a fevereiro, outono de março a maio, inverno de junho a agosto e primavera de setembro a novembro.
 
 ```bash
 curl "https://desafio-wifi-boticario-backend.onrender.com/metrics/visits/distribution?from=2025-10-08&to=2026-10-08"
@@ -107,6 +107,10 @@ curl "https://desafio-wifi-boticario-backend.onrender.com/metrics/visits/distrib
     { "hour": 0, "visits": 0 },
     { "hour": 18, "visits": 848 }
   ],
+  "byMonth": [
+    { "month": 1, "visits": 461 },
+    { "month": 12, "visits": 888 }
+  ],
   "bySeason": [
     { "season": "verao", "visits": 1665 },
     { "season": "outono", "visits": 1541 },
@@ -116,7 +120,7 @@ curl "https://desafio-wifi-boticario-backend.onrender.com/metrics/visits/distrib
 }
 ```
 
-O exemplo mostra só parte de `byWeekday` e `byHour`; a resposta real traz todos os itens.
+O exemplo mostra só parte de `byWeekday`, `byHour` e `byMonth`; a resposta real traz todos os itens.
 
 ## GET /stores
 

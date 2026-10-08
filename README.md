@@ -50,7 +50,7 @@ npm install
 npm test
 ```
 
-São 131 testes: 16 nos contratos (schemas), 68 no backend e 47 no frontend.
+São 133 testes: 16 nos contratos (schemas), 68 no backend e 49 no frontend.
 
 ## Stack
 

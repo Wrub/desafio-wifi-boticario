@@ -52,6 +52,7 @@ const visitorsPage: StoreVisitorsPage = {
 const emptyDistribution: VisitsDistribution = {
   byWeekday: Array.from({ length: 7 }, (_, weekday) => ({ weekday, visits: 0 })),
   byHour: Array.from({ length: 24 }, (_, hour) => ({ hour, visits: 0 })),
+  byMonth: Array.from({ length: 12 }, (_, i) => ({ month: i + 1, visits: 0 })),
   bySeason: (['verao', 'outono', 'inverno', 'primavera'] as const).map((season) => ({
     season,
     visits: 0,

@@ -45,7 +45,7 @@ main.ts                   sobe a API HTTP e o consumer
 | `RequestConnectionRegistration` | `POST /connections`                | valida, confere se a loja existe e publica na fila |
 | `SaveConnection`                | consumer da fila                   | valida de novo e grava                             |
 | `GetVisitsSummary`              | `GET /metrics/visits`              | total de visitas e visitantes únicos               |
-| `GetVisitsDistribution`         | `GET /metrics/visits/distribution` | visitas por dia da semana, hora e estação          |
+| `GetVisitsDistribution`         | `GET /metrics/visits/distribution` | visitas por dia da semana, hora, mês e estação     |
 | `ListStores`                    | `GET /stores`                      | lojas com visitas e visitantes únicos              |
 | `ListStoreVisitors`             | `GET /stores/:id/visitors`         | visitantes da loja, paginados, com o CPF mascarado |
 

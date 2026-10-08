@@ -21,7 +21,7 @@ O nginx devolve o `index.html` para qualquer rota desconhecida (`nginx.conf`), e
 
 - **Rede:** visitas e visitantes únicos de todas as lojas.
 - **Loja:** visitas, visitantes únicos e visitas por pessoa.
-- **Padrões de visita:** dia da semana, horário e estação com mais visitas, da rede (na tela inicial) e de cada loja. Cada um mostra o pico em destaque e as barras de todos os valores.
+- **Padrões de visita:** dia da semana, horário, mês e estação com mais visitas, da rede (na tela inicial) e de cada loja. Cada um mostra o pico em destaque e as barras de todos os valores.
 - **Lista de lojas:** abas verticais no desktop, com navegação pelas setas do teclado; faixa horizontal acima da tabela no celular.
 - **Tabela de visitantes:** busca por nome ou e-mail, paginação, filtro de período (Hoje, 7 dias, 30 dias, 12 meses; padrão 12 meses), celular, CPF mascarado, número de visitas, dias e horários de cada visita, última conexão e último aparelho.
 

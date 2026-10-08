@@ -3,6 +3,8 @@ import { formatNumber } from '../utils/format';
 export interface BarItem {
   key: string | number;
   label: string;
+  // rótulo curto embaixo da coluna (ex.: "Jan"); o completo fica no tooltip
+  shortLabel?: string;
   value: number;
 }
 
@@ -58,7 +60,7 @@ export function ColumnList({ items, highlightKey }: BarChartProps) {
               style={{ height: `${(item.value / max) * 100}%` }}
             />
           </span>
-          <span className="mt-1 text-[10px] text-ink-500">{item.label}</span>
+          <span className="mt-1 text-[10px] text-ink-500">{item.shortLabel ?? item.label}</span>
           <span className="sr-only">{formatNumber(item.value)} visitas</span>
         </li>
       ))}
