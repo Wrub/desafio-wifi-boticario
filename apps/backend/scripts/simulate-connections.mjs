@@ -33,6 +33,9 @@ const HOUR_WEIGHTS = [
   [20, 5],
   [21, 2],
 ];
+// mesmos pesos de mês (janeiro = 0) e dia da semana (domingo = 0) do seed
+const MONTH_WEIGHTS = [0.9, 0.8, 0.8, 0.9, 1.5, 1.1, 0.8, 1.0, 0.8, 0.9, 1.3, 1.8];
+const WEEKDAY_WEIGHTS = [0.8, 0.6, 0.7, 0.8, 0.9, 1.2, 1.5];
 
 const FIRST_NAMES = [
   'Ana',
@@ -147,9 +150,15 @@ function randomPerson() {
   };
 }
 
+const DAY_WEIGHTS = Array.from({ length: DAYS_BACK }, (_, daysAgo) => {
+  const day = new Date();
+  day.setDate(day.getDate() - daysAgo);
+  return [daysAgo, MONTH_WEIGHTS[day.getMonth()] * WEEKDAY_WEIGHTS[day.getDay()]];
+});
+
 function randomPastDate() {
   const date = new Date();
-  date.setDate(date.getDate() - Math.floor(Math.random() * DAYS_BACK));
+  date.setDate(date.getDate() - weightedPick(DAY_WEIGHTS));
   date.setHours(
     weightedPick(HOUR_WEIGHTS),
     Math.floor(Math.random() * 60),

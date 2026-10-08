@@ -1,17 +1,29 @@
 import { randomUUID } from 'node:crypto';
-import type {
-  ConnectionRepository,
-  Pagination,
-  StoreVisitorRow,
-  StoreVisitorsFilter,
-  StoreWithMetrics,
-  VisitsFilter,
-  VisitsSummary,
+import {
+  STORE_TIME_ZONE,
+  type ConnectionRepository,
+  type Pagination,
+  type StoreVisitorRow,
+  type StoreVisitorsFilter,
+  type StoreWithMetrics,
+  type VisitsCounts,
+  type VisitsFilter,
+  type VisitsSummary,
 } from '../../src/connections/application/ports/connection.repository.js';
 import type { MetricsPeriod } from '../../src/connections/application/period.js';
 import { WifiConnection } from '../../src/connections/domain/wifi-connection.js';
 
 type Store = { id: string; name: string; city: string };
+
+// mesmo papel do AT TIME ZONE do SQL: dia da semana, hora e mês no horário da loja
+const storeClock = new Intl.DateTimeFormat('en-US', {
+  timeZone: STORE_TIME_ZONE,
+  weekday: 'short',
+  hour: 'numeric',
+  hourCycle: 'h23',
+  month: 'numeric',
+});
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export class InMemoryConnectionRepository implements ConnectionRepository {
   readonly items = new Map<string, WifiConnection>();
@@ -49,6 +61,22 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
       totalVisits: inPeriod.length,
       uniqueVisitors: new Set(inPeriod.map((c) => c.visitor.phone.e164)).size,
     };
+  }
+
+  async countVisitsByTime({ from, to, storeId }: VisitsFilter): Promise<VisitsCounts> {
+    const counts: VisitsCounts = { byWeekday: new Map(), byHour: new Map(), byMonth: new Map() };
+    const add = (map: Map<number, number>, key: number) => map.set(key, (map.get(key) ?? 0) + 1);
+
+    for (const c of this.inPeriod({ from, to })) {
+      if (storeId !== undefined && c.storeId !== storeId) continue;
+      const parts = Object.fromEntries(
+        storeClock.formatToParts(c.connectedAt).map((p) => [p.type, p.value]),
+      );
+      add(counts.byWeekday, WEEKDAYS.indexOf(parts.weekday));
+      add(counts.byHour, Number(parts.hour));
+      add(counts.byMonth, Number(parts.month));
+    }
+    return counts;
   }
 
   async listStoreVisitors(

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { maskCpfInput, maskPhoneInput } from './format';
+import { formatHour, maskCpfInput, maskPhoneInput, SEASON_LABELS, WEEKDAY_LABELS } from './format';
 
 describe('maskPhoneInput', () => {
   it.each([
@@ -34,5 +34,17 @@ describe('maskCpfInput', () => {
 
   it('aceita colado com pontuação e ignora dígitos a mais', () => {
     expect(maskCpfInput('529.982.247-2599')).toBe('529.982.247-25');
+  });
+});
+
+describe('rótulos dos padrões de visita', () => {
+  it('começa a semana no domingo, como a API', () => {
+    expect(WEEKDAY_LABELS[0]).toBe('Domingo');
+    expect(WEEKDAY_LABELS[6]).toBe('Sábado');
+  });
+
+  it('formata estação e hora', () => {
+    expect(SEASON_LABELS.verao).toBe('Verão');
+    expect(formatHour(18)).toBe('18h');
   });
 });

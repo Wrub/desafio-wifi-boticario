@@ -1,14 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import type { MetricsPeriod } from '../../application/period.js';
-import type {
-  ConnectionRepository,
-  Pagination,
-  StoreVisitorRow,
-  StoreVisitorsFilter,
-  StoreWithMetrics,
-  VisitsFilter,
-  VisitsSummary,
+import {
+  STORE_TIME_ZONE,
+  type ConnectionRepository,
+  type Pagination,
+  type StoreVisitorRow,
+  type StoreVisitorsFilter,
+  type StoreWithMetrics,
+  type VisitsCounts,
+  type VisitsFilter,
+  type VisitsSummary,
 } from '../../application/ports/connection.repository.js';
 import type { DeviceType } from '../../domain/device.js';
 import { WifiConnection } from '../../domain/wifi-connection.js';
@@ -100,6 +102,33 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
       totalVisits: Number(row?.total_visits ?? 0),
       uniqueVisitors: Number(row?.unique_visitors ?? 0),
     };
+  }
+
+  async countVisitsByTime({ from, to, storeId }: VisitsFilter): Promise<VisitsCounts> {
+    // o banco guarda em UTC: sem o AT TIME ZONE, o pico das 18h apareceria às 21h
+    const rows: Array<{ kind: 'weekday' | 'hour' | 'month'; key: number; visits: string }> =
+      await this.dataSource.query(
+        `WITH local AS (
+           SELECT connected_at AT TIME ZONE $4 AS t
+           FROM wifi_connections
+           WHERE connected_at BETWEEN $1 AND $2
+             AND ($3::varchar IS NULL OR store_id = $3)
+         )
+         SELECT 'weekday' AS kind, EXTRACT(DOW FROM t)::int AS key, COUNT(*) AS visits
+         FROM local GROUP BY 2
+         UNION ALL
+         SELECT 'hour', EXTRACT(HOUR FROM t)::int, COUNT(*) FROM local GROUP BY 2
+         UNION ALL
+         SELECT 'month', EXTRACT(MONTH FROM t)::int, COUNT(*) FROM local GROUP BY 2`,
+        [from, to, storeId ?? null, STORE_TIME_ZONE],
+      );
+
+    const counts: VisitsCounts = { byWeekday: new Map(), byHour: new Map(), byMonth: new Map() };
+    const maps = { weekday: counts.byWeekday, hour: counts.byHour, month: counts.byMonth };
+    for (const row of rows) {
+      maps[row.kind].set(Number(row.key), Number(row.visits));
+    }
+    return counts;
   }
 
   async listStoreVisitors(

@@ -30,6 +30,7 @@ main.ts                   sobe a API HTTP e o consumer
 | `phone.ts`           | celular BR, normalizado no formato `+5541999998888`             |
 | `cpf.ts`             | dígito verificador e máscara (`***.982.247-**`)                 |
 | `device.ts`          | MAC normalizado (`AA:BB:CC:DD:EE:FF`) e tipo do aparelho        |
+| `season.ts`          | estação do ano pelo mês, no hemisfério sul (verão = dez a fev)  |
 | `domain.error.ts`    | `DomainError`, `InvalidConnectionError`, `NotFoundError`        |
 
 ### Portas e casos de uso (`application/`)
@@ -39,13 +40,14 @@ main.ts                   sobe a API HTTP e o consumer
 | `ConnectionRepository`     | tudo que é lido e gravado no banco | `TypeOrmConnectionRepository` |
 | `ConnectionEventPublisher` | publicar a conexão na fila         | `RabbitMqConnectionPublisher` |
 
-| Caso de uso                     | Usado por                  | O que faz                                          |
-| ------------------------------- | -------------------------- | -------------------------------------------------- |
-| `RequestConnectionRegistration` | `POST /connections`        | valida, confere se a loja existe e publica na fila |
-| `SaveConnection`                | consumer da fila           | valida de novo e grava                             |
-| `GetVisitsSummary`              | `GET /metrics/visits`      | total de visitas e visitantes únicos               |
-| `ListStores`                    | `GET /stores`              | lojas com visitas e visitantes únicos              |
-| `ListStoreVisitors`             | `GET /stores/:id/visitors` | visitantes da loja, paginados, com o CPF mascarado |
+| Caso de uso                     | Usado por                          | O que faz                                          |
+| ------------------------------- | ---------------------------------- | -------------------------------------------------- |
+| `RequestConnectionRegistration` | `POST /connections`                | valida, confere se a loja existe e publica na fila |
+| `SaveConnection`                | consumer da fila                   | valida de novo e grava                             |
+| `GetVisitsSummary`              | `GET /metrics/visits`              | total de visitas e visitantes únicos               |
+| `GetVisitsDistribution`         | `GET /metrics/visits/distribution` | visitas por dia da semana, hora e estação          |
+| `ListStores`                    | `GET /stores`                      | lojas com visitas e visitantes únicos              |
+| `ListStoreVisitors`             | `GET /stores/:id/visitors`         | visitantes da loja, paginados, com o CPF mascarado |
 
 O período das consultas é limitado a 366 dias (`application/period.ts`) para proteger o banco.
 
@@ -99,6 +101,8 @@ _connected_at_ e _received_at_ existem pois o RabbitMQ está participando do pro
 
 As consultas estão em `infra/persistence/typeorm-connection.repository.ts`, em SQL direto.
 
+Os padrões de visita (dia da semana, hora e mês) são contados no horário de Brasília, com `connected_at AT TIME ZONE 'America/Sao_Paulo'`. O banco guarda em UTC, então sem essa conversão o pico das 18h apareceria às 21h. Todas as lojas estão nesse fuso, e o Brasil não tem horário de verão desde 2019. O repositório devolve a contagem por mês, e o caso de uso agrupa os meses em estações.
+
 ## Tratamento de erros
 
 | Situação                                                         | Onde                | Resposta                                                 |
@@ -137,7 +141,7 @@ Variáveis de ambiente (exemplo em `apps/backend/.env.example`):
 
 ## Dados de exemplo
 
-- **Seed** (`infra/persistence/seed/`): roda no boot quando as variáveis `SEED_*` estão ligadas. Cria 5 lojas e, com o banco vazio, as conexões de exemplo dos últimos 365 dias. Usa uma semente fixa, então gera sempre os mesmos dados, e passa pela entidade de domínio, então segue as mesmas regras de uma conexão real.
+- **Seed** (`infra/persistence/seed/`): roda no boot quando as variáveis `SEED_*` estão ligadas. Cria 5 lojas e, com o banco vazio, as conexões de exemplo dos últimos 365 dias. Usa uma semente fixa, então gera sempre os mesmos dados, e passa pela entidade de domínio, então segue as mesmas regras de uma conexão real. Os dias têm peso pelo mês, seguindo o calendário do varejo (Natal, Dia das Mães, Black Friday, Namorados e Pais em alta), e pelo dia da semana (sábado mais cheio, segunda mais vazia), para os padrões de visita do dashboard mostrarem algo próximo do real.
 - **Simulador** (`scripts/simulate-connections.mjs`): manda conexões pelo `POST /connections`, passando pela API, pela fila e pelo consumer. Uso: `node scripts/simulate-connections.mjs [quantidade] [urlDaApi]`.
 
 ## Testes

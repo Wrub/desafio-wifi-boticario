@@ -76,7 +76,7 @@ O pacote `@wifi/contracts` (`packages/shared/contracts/src/`) define com Zod o f
 | ---------------- | --------------------------------------------------------------------------- |
 | `connections.ts` | registro de conexão (visitante, aparelho), evento da fila, regex do celular |
 | `stores.ts`      | lojas com métricas, query e página de visitantes                            |
-| `metrics.ts`     | query e resposta do resumo de visitas                                       |
+| `metrics.ts`     | query e resposta do resumo e dos padrões de visita (dia, hora e estação)    |
 | `period.ts`      | campos `from`/`to` e a regra `from <= to`                                   |
 | `errors.ts`      | formato de erro da API `{ statusCode, message, issues? }`                   |
 

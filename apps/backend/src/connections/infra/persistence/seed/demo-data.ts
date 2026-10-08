@@ -37,6 +37,14 @@ const HOUR_WEIGHTS: Array<[number, number]> = [
   [21, 2],
 ];
 
+// peso de cada mês (janeiro = 0) pelo calendário do varejo: Natal, Dia das Mães, Black Friday,
+// Dia dos Namorados e dos Pais em alta; Carnaval e meses sem data comemorativa em baixa.
+// Somando por estação, o verão fica na frente por causa do Natal e das férias.
+const MONTH_WEIGHTS = [0.9, 0.8, 0.8, 0.9, 1.5, 1.1, 0.8, 1.0, 0.8, 0.9, 1.3, 1.8];
+
+// peso de cada dia da semana (domingo = 0): sábado é o dia mais cheio, segunda o mais vazio
+const WEEKDAY_WEIGHTS = [0.8, 0.6, 0.7, 0.8, 0.9, 1.2, 1.5];
+
 const FIRST_NAMES = [
   'Ana',
   'Beatriz',
@@ -185,10 +193,17 @@ export function generateDemoConnections(
     person(random),
   );
 
+  // cada dia do período com o peso do mês e do dia da semana
+  const days = Array.from({ length: daysBack }, (_, daysAgo): [number, number] => {
+    const day = new Date(now);
+    day.setDate(day.getDate() - daysAgo);
+    return [daysAgo, MONTH_WEIGHTS[day.getMonth()] * WEEKDAY_WEIGHTS[day.getDay()]];
+  });
+
   return Array.from({ length: count }, () => {
     const someone = random.pick(people);
     const connectedAt = new Date(now);
-    connectedAt.setDate(connectedAt.getDate() - random.int(daysBack));
+    connectedAt.setDate(connectedAt.getDate() - random.weighted(days));
     connectedAt.setHours(random.weighted(HOUR_WEIGHTS), random.int(60), random.int(60), 0);
     // horário de hoje que ainda não chegou vira o mesmo horário de ontem
     if (connectedAt > now) connectedAt.setDate(connectedAt.getDate() - 1);

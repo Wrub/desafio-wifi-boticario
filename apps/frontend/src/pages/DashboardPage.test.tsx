@@ -1,6 +1,6 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { StoreSummary, StoreVisitorsPage } from '@wifi/contracts';
+import type { StoreSummary, StoreVisitorsPage, VisitsDistribution } from '@wifi/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { DashboardApiProvider } from '../api/api-context';
 import type { DashboardApi } from '../api/dashboard-api';
@@ -49,9 +49,19 @@ const visitorsPage: StoreVisitorsPage = {
   ],
 };
 
+const emptyDistribution: VisitsDistribution = {
+  byWeekday: Array.from({ length: 7 }, (_, weekday) => ({ weekday, visits: 0 })),
+  byHour: Array.from({ length: 24 }, (_, hour) => ({ hour, visits: 0 })),
+  bySeason: (['verao', 'outono', 'inverno', 'primavera'] as const).map((season) => ({
+    season,
+    visits: 0,
+  })),
+};
+
 function fakeApi(overrides: Partial<DashboardApi> = {}): DashboardApi {
   return {
     getVisitsSummary: vi.fn().mockResolvedValue({ totalVisits: 500, uniqueVisitors: 210 }),
+    getVisitsDistribution: vi.fn().mockResolvedValue(emptyDistribution),
     listStores: vi.fn().mockResolvedValue(stores),
     listStoreVisitors: vi.fn().mockResolvedValue(visitorsPage),
     ...overrides,

@@ -8,12 +8,12 @@ Aplicação React + Vite + Tailwind CSS, servida pelo nginx. Código em `apps/fr
 
 As rotas usam a History API do navegador, sem biblioteca de roteamento. O `main.tsx` escolhe a página pelo caminho.
 
-| Rota          | Tela                                                                     |
-| ------------- | ------------------------------------------------------------------------ |
-| `/`           | totais da rede e grade de lojas, com busca por nome ou cidade            |
-| `/lojas/:id`  | loja selecionada: lista de lojas, 3 indicadores e a tabela de visitantes |
-| `/portal`     | captive portal (simulação), aberto na primeira loja                      |
-| `/portal/:id` | captive portal de uma loja específica                                    |
+| Rota          | Tela                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| `/`           | totais e padrões de visita da rede, e grade de lojas, com busca por nome ou cidade          |
+| `/lojas/:id`  | loja selecionada: lista de lojas, 3 indicadores, padrões de visita e a tabela de visitantes |
+| `/portal`     | captive portal (simulação), aberto na primeira loja                                         |
+| `/portal/:id` | captive portal de uma loja específica                                                       |
 
 O nginx devolve o `index.html` para qualquer rota desconhecida (`nginx.conf`), então os links de loja e do portal funcionam ao abrir direto ou recarregar a página.
 
@@ -21,10 +21,11 @@ O nginx devolve o `index.html` para qualquer rota desconhecida (`nginx.conf`), e
 
 - **Rede:** visitas e visitantes únicos de todas as lojas.
 - **Loja:** visitas, visitantes únicos e visitas por pessoa.
+- **Padrões de visita:** dia da semana, horário e estação com mais visitas, da rede (na tela inicial) e de cada loja. Cada um mostra o pico em destaque e as barras de todos os valores.
 - **Lista de lojas:** abas verticais no desktop, com navegação pelas setas do teclado; faixa horizontal acima da tabela no celular.
 - **Tabela de visitantes:** busca por nome ou e-mail, paginação, filtro de período (Hoje, 7 dias, 30 dias, 12 meses; padrão 12 meses), celular, CPF mascarado, número de visitas, dias e horários de cada visita, última conexão e último aparelho.
 
-Os indicadores da rede e das lojas usam sempre os últimos 12 meses; o filtro de período vale só para a tabela.
+Os indicadores e os padrões de visita, da rede e das lojas, usam sempre os últimos 12 meses; o filtro de período vale só para a tabela.
 
 ### Captive portal
 
@@ -42,10 +43,10 @@ O filtro de período fica somente atrelada a tabela, facilitando o acesso e a tr
 
 ```
 api/          cliente HTTP da API e o contexto que injeta ele nas telas
-components/   componentes visuais (cards, tabela, abas, faixa, filtro de período…)
+components/   componentes visuais (cards, gráficos de barras, tabela, abas, faixa, filtro de período…)
 hooks/        busca de dados, debounce, rota da loja e cálculo do período
 pages/        DashboardPage e CaptivePortalPage
-utils/        formatação (números, datas, celular, CPF), filtro de lojas, aparelho simulado
+utils/        formatação (números, datas, celular, CPF, dia da semana, estação), filtro de lojas, aparelho simulado
 main.tsx      escolhe a página pelo caminho
 main.css      tema (tailwindcss)
 ```
@@ -53,7 +54,7 @@ main.css      tema (tailwindcss)
 ## Comunicação com a API
 
 - **`api/http.ts`:** faz as chamadas com `fetch`, **valida toda resposta com os schemas de `@wifi/contracts`** e transforma falhas em `ApiRequestError` com uma mensagem pronta para a tela.
-- **`api/dashboard-api.ts`** e **`api/portal-api.ts`:** as chamadas de cada tela. O dashboard lê métricas, lojas e visitantes; o portal lê as lojas e registra a conexão.
+- **`api/dashboard-api.ts`** e **`api/portal-api.ts`:** as chamadas de cada tela. O dashboard lê métricas, padrões de visita, lojas e visitantes; o portal lê as lojas e registra a conexão.
 - **`api/api-context.tsx`:** injeta em cada tela só a API que ela usa. Nos testes, uma API fake entra no lugar.
 - **`hooks/use-api-query.ts`:** controla carregando, erro e "tentar novamente", e cancela a requisição anterior quando os filtros mudam, pra uma resposta antiga não sobrescrever uma mais nova.
 

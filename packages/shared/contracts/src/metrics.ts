@@ -14,3 +14,22 @@ export const visitsSummarySchema = z.object({
   uniqueVisitors: z.number().int().nonnegative(),
 });
 export type VisitsSummary = z.infer<typeof visitsSummarySchema>;
+
+// Estações do hemisfério sul, pelo mês: verão = dez a fev, outono = mar a mai...
+export const SEASONS = ['verao', 'outono', 'inverno', 'primavera'] as const;
+export const seasonSchema = z.enum(SEASONS);
+export type Season = z.infer<typeof seasonSchema>;
+
+const visitsCount = z.number().int().nonnegative();
+
+// Visitas por dia da semana (0 = domingo), hora e estação, no horário de Brasília
+export const visitsDistributionSchema = z.object({
+  byWeekday: z
+    .array(z.object({ weekday: z.number().int().min(0).max(6), visits: visitsCount }))
+    .length(7),
+  byHour: z
+    .array(z.object({ hour: z.number().int().min(0).max(23), visits: visitsCount }))
+    .length(24),
+  bySeason: z.array(z.object({ season: seasonSchema, visits: visitsCount })).length(4),
+});
+export type VisitsDistribution = z.infer<typeof visitsDistributionSchema>;

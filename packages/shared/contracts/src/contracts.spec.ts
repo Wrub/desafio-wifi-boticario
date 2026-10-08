@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { registerConnectionSchema, storeVisitorsQuerySchema, visitsQuerySchema } from './index.js';
+import {
+  registerConnectionSchema,
+  storeVisitorsQuerySchema,
+  visitsDistributionSchema,
+  visitsQuerySchema,
+} from './index.js';
 
 const validPayload = {
   storeId: 'loja-centro',
@@ -71,5 +76,36 @@ describe('storeVisitorsQuerySchema', () => {
   it('usa página 1 e 10 itens quando não vem nada', () => {
     const result = storeVisitorsQuerySchema.parse({ from: '2026-10-01', to: '2026-10-07' });
     expect(result).toMatchObject({ page: 1, pageSize: 10 });
+  });
+});
+
+describe('visitsDistributionSchema', () => {
+  const distribution = {
+    byWeekday: Array.from({ length: 7 }, (_, weekday) => ({ weekday, visits: 0 })),
+    byHour: Array.from({ length: 24 }, (_, hour) => ({ hour, visits: 0 })),
+    bySeason: (['verao', 'outono', 'inverno', 'primavera'] as const).map((season) => ({
+      season,
+      visits: 0,
+    })),
+  };
+
+  it('aceita os 7 dias, as 24 horas e as 4 estações', () => {
+    expect(visitsDistributionSchema.safeParse(distribution).success).toBe(true);
+  });
+
+  it('recusa quando falta um dia da semana', () => {
+    const result = visitsDistributionSchema.safeParse({
+      ...distribution,
+      byWeekday: distribution.byWeekday.slice(1),
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('recusa estação desconhecida', () => {
+    const result = visitsDistributionSchema.safeParse({
+      ...distribution,
+      bySeason: [...distribution.bySeason.slice(1), { season: 'monção', visits: 0 }],
+    });
+    expect(result.success).toBe(false);
   });
 });

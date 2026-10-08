@@ -10,6 +10,7 @@ import { PeriodSelector } from './PeriodSelector';
 import { SearchInput } from './SearchInput';
 import { STORE_PANEL_ID } from './StoreTabs';
 import { TableSkeleton, VisitorsTable } from './VisitorsTable';
+import { VisitPatterns } from './VisitPatterns';
 
 const PAGE_SIZE = 10;
 
@@ -78,6 +79,8 @@ export function StoreDetails({ store, onClose, mobileStoreSwitcher }: StoreDetai
           hint="Quanto o cliente volta, em média"
         />
       </div>
+
+      <VisitPatterns title="Quando a loja é mais visitada" storeId={store.id} headingLevel="h3" />
 
       {mobileStoreSwitcher && <div className="lg:hidden">{mobileStoreSwitcher}</div>}
 

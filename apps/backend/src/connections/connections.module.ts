@@ -10,6 +10,7 @@ import {
   CONNECTION_REPOSITORY,
   type ConnectionRepository,
 } from './application/ports/connection.repository.js';
+import { GetVisitsDistribution } from './application/use-cases/get-visits-distribution.js';
 import { GetVisitsSummary } from './application/use-cases/get-visits-summary.js';
 import { ListStoreVisitors } from './application/use-cases/list-store-visitors.js';
 import { ListStores } from './application/use-cases/list-stores.js';
@@ -73,6 +74,11 @@ import { WifiConnectionOrmEntity } from './infra/persistence/wifi-connection.orm
       provide: GetVisitsSummary,
       inject: [CONNECTION_REPOSITORY],
       useFactory: (repository: ConnectionRepository) => new GetVisitsSummary(repository),
+    },
+    {
+      provide: GetVisitsDistribution,
+      inject: [CONNECTION_REPOSITORY],
+      useFactory: (repository: ConnectionRepository) => new GetVisitsDistribution(repository),
     },
     {
       provide: ListStores,

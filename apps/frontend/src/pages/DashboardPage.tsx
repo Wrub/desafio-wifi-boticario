@@ -6,6 +6,7 @@ import { StoreDetails } from '../components/StoreDetails';
 import { StoreGrid, StoreGridSkeleton } from '../components/StoreGrid';
 import { StoreStrip } from '../components/StoreStrip';
 import { StoreTabs, StoreTabsSkeleton } from '../components/StoreTabs';
+import { VisitPatterns } from '../components/VisitPatterns';
 import { MAX_PERIOD, periodToRange } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
 import { useStoreRoute } from '../hooks/use-store-route';
@@ -78,6 +79,8 @@ export function DashboardPage() {
             </>
           )}
         </section>
+
+        {!routeStoreId && <VisitPatterns title="Quando a rede é mais usada" />}
 
         {stores.error ? (
           <ErrorState message={stores.error} onRetry={stores.retry} />

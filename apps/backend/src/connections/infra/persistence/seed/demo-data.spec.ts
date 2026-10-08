@@ -39,6 +39,25 @@ describe('generateDemoConnections', () => {
     expect(Math.min(...daysAgo)).toBeGreaterThanOrEqual(0);
   });
 
+  describe('sazonalidade', () => {
+    const many = generateDemoConnections(3000, { now });
+    const count = (pick: (date: Date) => boolean) => many.filter((c) => pick(c.connectedAt)).length;
+
+    it('tem mais visitas no verão (dez a fev) do que no inverno (jun a ago)', () => {
+      const summer = count((d) => [11, 0, 1].includes(d.getMonth()));
+      const winter = count((d) => [5, 6, 7].includes(d.getMonth()));
+      expect(summer).toBeGreaterThan(winter);
+    });
+
+    it('tem mais visitas no sábado do que na segunda', () => {
+      expect(count((d) => d.getDay() === 6)).toBeGreaterThan(count((d) => d.getDay() === 1));
+    });
+
+    it('tem mais visitas em dezembro (Natal) do que em março', () => {
+      expect(count((d) => d.getMonth() === 11)).toBeGreaterThan(count((d) => d.getMonth() === 2));
+    });
+  });
+
   it('não gera ids repetidos', () => {
     expect(new Set(connections.map((c) => c.id)).size).toBe(connections.length);
   });

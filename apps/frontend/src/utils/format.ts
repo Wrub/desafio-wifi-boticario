@@ -1,4 +1,4 @@
-import type { DeviceType } from '@wifi/contracts';
+import type { DeviceType, Season } from '@wifi/contracts';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -55,4 +55,26 @@ export function normalizeText(text: string): string {
 
 export function formatNumber(value: number, maximumFractionDigits = 0): string {
   return value.toLocaleString('pt-BR', { maximumFractionDigits });
+}
+
+// índice = dia da semana que a API devolve (0 = domingo)
+export const WEEKDAY_LABELS = [
+  'Domingo',
+  'Segunda',
+  'Terça',
+  'Quarta',
+  'Quinta',
+  'Sexta',
+  'Sábado',
+];
+
+export const SEASON_LABELS: Record<Season, string> = {
+  verao: 'Verão',
+  outono: 'Outono',
+  inverno: 'Inverno',
+  primavera: 'Primavera',
+};
+
+export function formatHour(hour: number): string {
+  return `${hour}h`;
 }
