@@ -37,9 +37,11 @@ Realizei a simulação de um simples captive portal para acesso ao Wi-Fi, para d
 ### Produto
 
 - **Visitante identificado pelo celular, e não pelo CPF nem pelo aparelho.**
+  - Para permitir a identificação no cadastro do aplicativo, para campanha com push notifications, ou outras opções como SMS ou WhatsApp.
 - **CPF opcional, oferecido em troca do clube de vantagens.**
-- **CPF mascarado na API, celular exibido completo.**
+  - Seguindo a LGPD, não tornando o CPF obrigatório para acesso ao Wi-Fi, caso o usuário deseje informar e fazer parte de um possível clube de vantagens ou de ofertas, é possível atrelar isso a compra efetuada sobre este CPF e traçar a trajetória de comportamento do cliente.
 - **Indicadores sempre nos últimos 12 meses; filtro de período só na tabela de visitantes.**
+  - Para que stakeholders tenham uma visualização anual dos acessos, permitindo visualização sazonal [visualizar o tópico de implementações futuras](./solucao.md#próximos-passos)
 
 ### Arquitetura
 
