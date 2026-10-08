@@ -1,5 +1,3 @@
-<!-- TODO: estrutura e seções organizadas. Falta escrever o conteúdo dos trechos marcados com "escrever" e apagar estes comentários antes da entrega. -->
-
 # Arquitetura
 
 [← Voltar ao README](../README.md)

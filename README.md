@@ -5,6 +5,9 @@
 > [!IMPORTANT]
 > O backend está no plano gratuito do Render e é desligado quando está em inatividade, por isso, antes de acessar o dashboard, é necessário acessar a [URL da API](https://desafio-wifi-boticario-backend.onrender.com/health) e aguardar cerca de 1 minuto até ela responder `{"status":"ok"}`. Sem isso, a primeira carga do dashboard mostra erro de conexão.
 
+> [!WARNING]
+> A plataforma **Render** informou que terá manutenção em serviços críticos e estará **offline** em determinado período, caso o projeto seja avaliado nesse período, precisará ser localmente devido ao serviço hospedado estar em manutenção. [Aviso de manutenção](<[https://](https://status.render.com/incidents/bwd9ycdxqps4)>)
+
 | Aplicação      | URL                                                        |
 | -------------- | ---------------------------------------------------------- |
 | Dashboard      | https://desafio-wifi-boticario.onrender.com/               |
