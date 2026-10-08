@@ -2,8 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { StoreSummary } from '@wifi/contracts';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiProvider } from '../api/api-context';
-import { ApiRequestError, type DashboardApi } from '../api/dashboard-api';
+import { PortalApiProvider } from '../api/api-context';
+import { ApiRequestError } from '../api/http';
+import type { PortalApi } from '../api/portal-api';
 import { simulatedDevice } from '../utils/device';
 import { CaptivePortalPage } from './CaptivePortalPage';
 
@@ -12,22 +13,20 @@ const stores: StoreSummary[] = [
   { id: 'loja-orla', name: 'Orla', city: 'Florianópolis', totalVisits: 0, uniqueVisitors: 0 },
 ];
 
-function fakeApi(overrides: Partial<DashboardApi> = {}): DashboardApi {
+function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
   return {
-    getVisitsSummary: vi.fn(),
     listStores: vi.fn().mockResolvedValue(stores),
-    listStoreVisitors: vi.fn(),
     registerConnection: vi.fn().mockResolvedValue({ id: 'f3a1c2b8-3d4a-4b5c-9e7f-1a2b3c4d5e6f' }),
     ...overrides,
   };
 }
 
-function renderPortal(api: DashboardApi, path = '/portal/loja-orla') {
+function renderPortal(api: PortalApi, path = '/portal/loja-orla') {
   window.history.replaceState(null, '', path);
   render(
-    <ApiProvider api={api}>
+    <PortalApiProvider api={api}>
       <CaptivePortalPage />
-    </ApiProvider>,
+    </PortalApiProvider>,
   );
 }
 

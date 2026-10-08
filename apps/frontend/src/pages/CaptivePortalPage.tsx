@@ -1,7 +1,7 @@
 import { useId, useState, type FormEvent, type InputHTMLAttributes } from 'react';
 import { registerConnectionSchema, type RegisterConnectionRequest } from '@wifi/contracts';
-import { useDashboardApi } from '../api/api-context';
-import { ApiRequestError } from '../api/dashboard-api';
+import { usePortalApi } from '../api/api-context';
+import { ApiRequestError } from '../api/http';
 import { ErrorState } from '../components/ErrorState';
 import { MAX_PERIOD, periodToRange } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
@@ -32,7 +32,7 @@ type FieldErrors = Partial<Record<Field, string>>;
 const EMPTY_FORM = { name: '', phone: '', email: '', cpf: '' };
 
 export function CaptivePortalPage() {
-  const api = useDashboardApi();
+  const api = usePortalApi();
   const stores = useApiQuery((signal) => api.listStores(periodToRange(MAX_PERIOD), signal), [api]);
   const [pathStoreId, setPathStoreId] = useState(() =>
     storeIdFromPortalPath(window.location.pathname),

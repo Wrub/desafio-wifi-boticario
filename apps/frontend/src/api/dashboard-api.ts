@@ -1,23 +1,15 @@
 import {
-  apiErrorSchema,
-  registerConnectionResponseSchema,
   storesResponseSchema,
   storeVisitorsPageSchema,
   visitsSummarySchema,
-  type ApiError,
-  type RegisterConnectionRequest,
-  type RegisterConnectionResponse,
   type StoreSummary,
   type StoreVisitorsPage,
   type StoreVisitorsQueryInput,
   type VisitsQuery,
   type VisitsSummary,
 } from '@wifi/contracts';
-import type { ZodType } from 'zod';
+import { periodParams, requestJson, type Period } from './http';
 
-type Period = { from: Date; to: Date };
-
-// todas chamadas de API do Dashboard
 export interface DashboardApi {
   getVisitsSummary(query: VisitsQuery, signal?: AbortSignal): Promise<VisitsSummary>;
   listStores(period: Period, signal?: AbortSignal): Promise<StoreSummary[]>;
@@ -26,57 +18,6 @@ export interface DashboardApi {
     query: StoreVisitorsQueryInput & Period,
     signal?: AbortSignal,
   ): Promise<StoreVisitorsPage>;
-  // usado pelo captive portal
-  registerConnection(body: RegisterConnectionRequest): Promise<RegisterConnectionResponse>;
-}
-
-export class ApiRequestError extends Error {
-  constructor(
-    message: string,
-    readonly status?: number,
-    readonly issues?: ApiError['issues'],
-  ) {
-    super(message);
-    this.name = 'ApiRequestError';
-  }
-}
-
-async function requestJson<T>(
-  url: string,
-  schema: ZodType<T>,
-  signal?: AbortSignal,
-  init?: RequestInit,
-): Promise<T> {
-  let response: Response;
-  try {
-    response = await fetch(url, { ...init, signal });
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') throw error;
-    throw new ApiRequestError('Não foi possível conectar ao servidor.');
-  }
-
-  const body: unknown = await response.json().catch(() => undefined);
-
-  if (!response.ok) {
-    const apiError = apiErrorSchema.safeParse(body);
-    throw new ApiRequestError(
-      apiError.success ? apiError.data.message : `Erro inesperado (HTTP ${response.status}).`,
-      response.status,
-      apiError.success ? apiError.data.issues : undefined,
-    );
-  }
-
-  // parse para validar se a resposta está de acordo com o schema de contract
-  const parsed = schema.safeParse(body);
-  if (!parsed.success) {
-    console.error('Resposta fora do contrato', parsed.error);
-    throw new ApiRequestError('O servidor respondeu em um formato inesperado.');
-  }
-  return parsed.data;
-}
-
-function periodParams({ from, to }: Period): URLSearchParams {
-  return new URLSearchParams({ from: from.toISOString(), to: to.toISOString() });
 }
 
 export function createHttpDashboardApi(baseUrl: string): DashboardApi {
@@ -101,14 +42,6 @@ export function createHttpDashboardApi(baseUrl: string): DashboardApi {
         storeVisitorsPageSchema,
         signal,
       );
-    },
-
-    registerConnection(body) {
-      return requestJson(`${baseUrl}/connections`, registerConnectionResponseSchema, undefined, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
     },
   };
 }

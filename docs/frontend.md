@@ -53,8 +53,9 @@ main.css      tema (cores e fonte)
 
 ## Comunicação com a API
 
-- **`api/dashboard-api.ts`:** faz as chamadas com `fetch`, **valida toda resposta com os schemas de `@wifi/contracts`** e transforma falhas em `ApiRequestError` com uma mensagem pronta para a tela.
-- **`api/api-context.tsx`:** injeta a API nas telas. Nos testes, uma API fake entra no lugar.
+- **`api/http.ts`:** faz as chamadas com `fetch`, **valida toda resposta com os schemas de `@wifi/contracts`** e transforma falhas em `ApiRequestError` com uma mensagem pronta para a tela.
+- **`api/dashboard-api.ts`** e **`api/portal-api.ts`:** as chamadas de cada tela. O dashboard lê métricas, lojas e visitantes; o portal lê as lojas e registra a conexão.
+- **`api/api-context.tsx`:** injeta em cada tela só a API que ela usa. Nos testes, uma API fake entra no lugar.
 - **`hooks/use-api-query.ts`:** controla carregando, erro e "tentar novamente", e cancela a requisição anterior quando os filtros mudam, pra uma resposta antiga não sobrescrever uma mais nova.
 
 O endereço da API vem de `VITE_API_URL`, definido no build (padrão `http://localhost:3000`).

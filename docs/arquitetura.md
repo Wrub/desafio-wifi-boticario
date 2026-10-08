@@ -83,7 +83,7 @@ O pacote `@wifi/contracts` (`packages/shared/contracts/src/`) define com Zod o f
 Quem usa cada schema:
 
 - **Backend:** valida as requisições que chegam (`ZodValidationPipe`) e as mensagens que saem da fila (consumer).
-- **Frontend:** valida as respostas da API (`dashboard-api.ts`) e o formulário do captive portal.
+- **Frontend:** valida as respostas da API (`api/http.ts`) e o formulário do captive portal.
 
 É uma ótima e interessantissima prática definir contratos/schemas de comunicação de validação entre duas frente que possuem atuações sobre o mesmo domínio e para proposta da solução utilizem os mesmos dados para trabalho.
 

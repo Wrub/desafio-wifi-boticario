@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type DependencyList } from 'react';
-import { ApiRequestError } from '../api/dashboard-api';
+import { ApiRequestError } from '../api/http';
 
 export interface ApiQuery<T> {
   data: T | undefined;

@@ -2,8 +2,9 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { StoreSummary, StoreVisitorsPage } from '@wifi/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiProvider } from '../api/api-context';
-import { ApiRequestError, type DashboardApi } from '../api/dashboard-api';
+import { DashboardApiProvider } from '../api/api-context';
+import type { DashboardApi } from '../api/dashboard-api';
+import { ApiRequestError } from '../api/http';
 import { DashboardPage } from './DashboardPage';
 
 const stores: StoreSummary[] = [
@@ -53,16 +54,15 @@ function fakeApi(overrides: Partial<DashboardApi> = {}): DashboardApi {
     getVisitsSummary: vi.fn().mockResolvedValue({ totalVisits: 500, uniqueVisitors: 210 }),
     listStores: vi.fn().mockResolvedValue(stores),
     listStoreVisitors: vi.fn().mockResolvedValue(visitorsPage),
-    registerConnection: vi.fn(),
     ...overrides,
   };
 }
 
 function renderPage(api: DashboardApi) {
   return render(
-    <ApiProvider api={api}>
+    <DashboardApiProvider api={api}>
       <DashboardPage />
-    </ApiProvider>,
+    </DashboardApiProvider>,
   );
 }
 
