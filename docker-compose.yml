@@ -6,11 +6,11 @@ services:
       POSTGRES_PASSWORD: wifi
       POSTGRES_DB: wifi
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U wifi -d wifi"]
+      test: ['CMD-SHELL', 'pg_isready -U wifi -d wifi']
       interval: 5s
       timeout: 3s
       retries: 10
@@ -21,10 +21,10 @@ services:
       RABBITMQ_DEFAULT_USER: wifi
       RABBITMQ_DEFAULT_PASS: wifi
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -41,14 +41,14 @@ services:
       DATABASE_USER: wifi
       DATABASE_PASSWORD: wifi
       DATABASE_NAME: wifi
-      DB_SYNC: "true"
-      SEED_STORES: "true"
-      SEED_CONNECTIONS: "true"
+      DB_SYNC: 'true'
+      SEED_STORES: 'true'
+      SEED_CONNECTIONS: 'true'
       SEED_CONNECTIONS_COUNT: 6000
       RABBITMQ_URL: amqp://wifi:wifi@rabbitmq:5672
       FRONTEND_URL: http://localhost:8080,http://localhost:5173
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,7 +63,7 @@ services:
       args:
         VITE_API_URL: http://localhost:3000
     ports:
-      - "8080:80"
+      - '8080:80'
     depends_on:
       - backend
 

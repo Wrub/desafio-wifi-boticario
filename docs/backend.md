@@ -104,16 +104,17 @@ As consultas estão em `infra/persistence/typeorm-connection.repository.ts`, em 
 
 ## Tratamento de erros
 
-| Situação                                    | Onde                | Resposta                                                 |
-| ------------------------------------------- | ------------------- | -------------------------------------------------------- |
-| Formato inválido (query, parâmetro, body)   | `ZodValidationPipe` | 400 `{ statusCode, message: "Dados inválidos", issues }` |
-| Regra de negócio (CPF, celular, data, loja) | `DomainErrorFilter` | 400 `{ statusCode, message }`                            |
-| Loja não encontrada                         | `DomainErrorFilter` | 404                                                      |
-| RabbitMQ indisponível ao publicar           | `DomainErrorFilter` | 503                                                      |
-| Banco indisponível                          | `GET /health`       | 503                                                      |
-| Mensagem fora do contrato na fila           | consumer            | descartada, com log                                      |
-| Erro de domínio ao gravar                   | consumer            | descartada, com log                                      |
-| Outro erro ao gravar (ex.: banco fora)      | consumer            | espera 2s e devolve a mensagem pra fila                  |
+| Situação                                                         | Onde                | Resposta                                                 |
+| ---------------------------------------------------------------- | ------------------- | -------------------------------------------------------- |
+| Formato inválido (query, parâmetro, body)                        | `ZodValidationPipe` | 400 `{ statusCode, message: "Dados inválidos", issues }` |
+| Regra de negócio (CPF, celular, data, período acima de 366 dias) | `DomainErrorFilter` | 400 `{ statusCode, message }`                            |
+| Loja inexistente no `POST /connections`                          | `DomainErrorFilter` | 400                                                      |
+| Loja não encontrada no `GET /stores/:storeId/visitors`           | `DomainErrorFilter` | 404                                                      |
+| RabbitMQ indisponível ao publicar                                | `DomainErrorFilter` | 503                                                      |
+| Banco indisponível                                               | `GET /health`       | 503                                                      |
+| Mensagem fora do contrato na fila                                | consumer            | descartada, com log                                      |
+| Erro de domínio ao gravar                                        | consumer            | descartada, com log                                      |
+| Outro erro ao gravar (ex.: banco fora)                           | consumer            | espera 2s e devolve a mensagem pra fila                  |
 
 <!-- escrever: por que validar duas vezes (Zod na borda, domínio nas regras) e por que o
 consumer não confia na mensagem. -->

@@ -5,6 +5,7 @@ coverage/
 .env
 .env.local
 .DS_Store
+.vscode/
 
 # documentos pessoais do desafio (enunciado, PDF e anotações), fora do repositório
 docs-pessoais/
