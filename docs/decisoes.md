@@ -36,10 +36,9 @@ Um parágrafo curto por item já é suficiente. -->
 - **Rotas sem biblioteca (History API).** <!-- escrever -->
 - **Respostas da API validadas pelo contrato.** <!-- escrever -->
 - **date-fns para formatar dias e horários.** <!-- escrever -->
+-
 
-## Fora do escopo
+## Limitações conhecidas
 
-<!-- escrever: o que ficou de fora e por quê (dead-letter queue, criptografia, consentimento
-de marketing, gráficos de horários de pico, novos x recorrentes). -->
-
-As limitações conhecidas estão descritas no [README](../README.md#limitações-conhecidas).
+- **Dados pessoais sem criptografia no banco:** CPF e celular são armazenados em texto puro. Hoje a proteção está na API, que nunca devolve o CPF completo (sempre mascarado). Como evolução, os campos seriam criptografados e o CPF ganharia um hash para permitir a busca, já que hoje ele é indexado.
+- **Sem dead-letter queue:** quando a gravação de uma conexão falha por um erro que não é de domínio (por exemplo, banco fora do ar), a mensagem volta para a fila a cada 2 segundos, sem limite de tentativas. Isso garante que nada se perca em uma queda temporária, mas um erro permanente faria a mensagem circular indefinidamente. Como evolução, o consumer contaria as tentativas e, após N falhas, moveria a mensagem para uma fila onde poderia ser analisada e reprocessada.

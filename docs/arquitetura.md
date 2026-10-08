@@ -9,8 +9,8 @@
 O projeto é um monorepo com npm workspaces:
 
 ```
-packages/shared/contracts   schemas Zod usados pelo backend e pelo frontend
-apps/backend                API NestJS + consumer do RabbitMQ
+packages/shared/contracts   schemas Zod usados pelo backend e pelo frontend, definindo contratos entre as frentes
+apps/backend                API em NestJS + consumer do RabbitMQ
 apps/frontend               dashboard e captive portal (React + Vite)
 docker-compose.yml          postgres, rabbitmq, backend e frontend
 ```
@@ -37,8 +37,6 @@ flowchart LR
 ```
 
 O nginx só entrega os arquivos estáticos do frontend. O navegador chama a API diretamente, no endereço definido em `VITE_API_URL`. A API e o consumer rodam no mesmo processo (aplicação híbrida do NestJS).
-
-<!-- escrever: por que essa divisão, e por que o consumer fica no mesmo processo neste projeto. -->
 
 ## Fluxo de uma conexão
 
@@ -68,14 +66,7 @@ sequenceDiagram
     end
 ```
 
-<!-- escrever: por que usar fila (picos de conexão, resposta rápida, nada se perde se o banco
-cair) e por que a resposta é 202 e não 201. -->
-
-### Idempotência
-
-<!-- escrever: o RabbitMQ entrega "pelo menos uma vez". O id da conexão é gerado na API antes
-de publicar, e o insert usa ON CONFLICT (id) DO NOTHING, então uma entrega repetida não
-duplica a visita. O upsert do visitante pelo celular também pode repetir sem problema. -->
+Como estou utilizando um banco de dados em nuvem, acredito ser importante, dependendo da viabilidade técnica e dos limites de custo, a implementação de uma ferramenta de filas, para picos de conexão de usuários, como o número de lojas reais ultrapassa 4000 e a possível queda do banco de dados em nuvem, mesmo que o downtime seja baixíssimo.
 
 ## Contratos compartilhados
 
@@ -94,10 +85,8 @@ Quem usa cada schema:
 - **Backend:** valida as requisições que chegam (`ZodValidationPipe`) e as mensagens que saem da fila (consumer).
 - **Frontend:** valida as respostas da API (`dashboard-api.ts`) e o formulário do captive portal.
 
-<!-- escrever: o ganho de ter uma fonte única do formato dos dados. -->
+É uma ótima e interessantissima prática definir contratos/schemas de comunicação de validação entre duas frente que possuem atuações sobre o mesmo domínio e para proposta da solução utilizem os mesmos dados para trabalho.
 
 ## Arquitetura hexagonal no backend
 
-<!-- escrever: por que hexagonal (domínio e casos de uso não conhecem NestJS, Postgres nem
-RabbitMQ), o que isso permite nos testes e na troca de tecnologia. Detalhes das camadas em
-docs/backend.md. -->
+A arquitetura hexagonal nos permite manter centralizado a parte de domínio e lógica de negócio, podendo "isolar" a aplicação da solução de software, qual facilita a questão de testes, troca de infraestrutura, por exemplo, para caso seja necessária a remoção do serviço de filas/mensageiria. Para um projeto realizado como esse para o desafio, a arquitetura hexagonal traz complexidade, mas em projetos reais aplicados, a complexidade é convertida em estrutura a longo prazo, escalabilidade, manutenabilidade e demais beneficios mencionados anteriormente em termos de código.

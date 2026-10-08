@@ -1,15 +1,9 @@
-<!-- TODO: estrutura e seções organizadas. Falta escrever a introdução, adicionar os prints em docs/img/ e apagar estes comentários antes da entrega. -->
-
 # Desafio Fullstack Wi-fi Grupo Boticario
 
-Dashboard destinado ao proprietário de lojas O Boticário, para o acompanhamento do uso da rede Wi-Fi de visitantes.
-
-<!-- escrever: 2 ou 3 frases sobre o que o dashboard mostra e qual decisão ele ajuda a tomar. -->
-
-## Acesso online
+## Acessos
 
 > [!IMPORTANT]
-> O backend está no plano gratuito do Render e é desligado quando fica parado. Antes de usar o dashboard ou o portal, é necessário acessar a [URL da API](https://desafio-wifi-boticario-backend.onrender.com/health) e **aguardar cerca de 1 minuto** até ela responder `{"status":"ok"}`. Sem isso, a primeira carga do dashboard mostra erro de conexão.
+> O backend está no plano gratuito do Render e é desligado quando está em inatividade, por isso, antes de acessar o dashboard, é necessário acessar a [URL da API](https://desafio-wifi-boticario-backend.onrender.com/health) e aguardar cerca de 1 minuto até ela responder `{"status":"ok"}`. Sem isso, a primeira carga do dashboard mostra erro de conexão.
 
 | Aplicação      | URL                                                        |
 | -------------- | ---------------------------------------------------------- |
@@ -18,11 +12,9 @@ Dashboard destinado ao proprietário de lojas O Boticário, para o acompanhament
 | API            | https://desafio-wifi-boticario-backend.onrender.com        |
 | Health check   | https://desafio-wifi-boticario-backend.onrender.com/health |
 
-<!-- adicionar prints: docs/img/dashboard.png e docs/img/portal.png -->
+## Setup local
 
-## Execução do projeto
-
-A execução requer o [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e em funcionamento.
+A execução requer o [Docker](https://www.docker.com/products/docker-desktop/), pode ser o Docker desktop para sistemas Windows, ou docker instalado nos demais sistemas operacionais e em funcionamento.
 
 1. Para clonar o repositório e iniciar a aplicação, são utilizados os comandos a seguir:
 
@@ -32,7 +24,7 @@ A execução requer o [Docker Desktop](https://www.docker.com/products/docker-de
    docker compose up -d --build
    ```
 
-2. Após a inicialização, os serviços ficam disponíveis nos endereços abaixo. O banco de dados já é iniciado com lojas e conexões de exemplo.
+2. Após a inicialização, os serviços ficam disponíveis nos endereços abaixo. O banco de dados já é iniciado com lojas e conexões de exemplo (seeds executados).
 
    | Serviço            | Endereço                                         |
    | ------------------ | ------------------------------------------------ |
@@ -41,7 +33,7 @@ A execução requer o [Docker Desktop](https://www.docker.com/products/docker-de
    | API                | http://localhost:3000                            |
    | Painel do RabbitMQ | http://localhost:15672 (usuário e senha: `wifi`) |
 
-3. Opcionalmente, novas conexões podem ser geradas pelo simulador:
+3. Opcionalmente, novas conexões/visitas podem ser geradas pelo simulador:
 
    ```bash
    docker compose exec backend node scripts/simulate-connections.mjs 200
@@ -58,7 +50,7 @@ npm install
 npm test
 ```
 
-São 102 testes: 13 nos contratos, 48 no backend e 41 no frontend.
+São 102 testes: 13 nos contratos (schemas), 48 no backend e 41 no frontend.
 
 ## Stack
 
@@ -83,10 +75,3 @@ São 102 testes: 13 nos contratos, 48 no backend e 41 no frontend.
 - [API](docs/api.md): rotas, parâmetros e exemplos
 - [Decisões técnicas](docs/decisoes.md)
 - [Uso de IA no desenvolvimento](AI_USAGE.md)
-
-## Limitações conhecidas
-
-- **Dados pessoais sem criptografia no banco:** CPF e celular são armazenados em texto puro. Hoje a proteção está na API, que nunca devolve o CPF completo (sempre mascarado). Como evolução, os campos seriam criptografados (AES-GCM) e o CPF ganharia um hash (HMAC) para permitir a busca, já que hoje ele é indexado.
-- **Sem dead-letter queue:** quando a gravação de uma conexão falha por um erro que não é de domínio (por exemplo, banco fora do ar), a mensagem volta para a fila a cada 2 segundos, sem limite de tentativas. Isso garante que nada se perca em uma queda temporária, mas um erro permanente faria a mensagem circular indefinidamente. Como evolução, o consumer contaria as tentativas e, após N falhas, moveria a mensagem para uma fila `wifi_connections.dlq`, onde poderia ser analisada e reprocessada.
-
-Outras decisões e trade-offs estão em [Decisões técnicas](docs/decisoes.md).

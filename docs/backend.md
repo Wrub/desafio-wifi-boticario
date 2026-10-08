@@ -1,5 +1,3 @@
-<!-- TODO: estrutura e seções organizadas. Falta escrever o conteúdo dos trechos marcados com "escrever" e apagar estes comentários antes da entrega. -->
-
 # Backend
 
 [← Voltar ao README](../README.md)
@@ -51,9 +49,6 @@ main.ts                   sobe a API HTTP e o consumer
 
 O período das consultas é limitado a 366 dias (`application/period.ts`) para proteger o banco.
 
-<!-- escrever: por que hexagonal, e como isso aparece nos testes (fakes em memória em
-apps/backend/test/fakes). -->
-
 ## Modelo de dados
 
 ```mermaid
@@ -99,16 +94,13 @@ Os horários são `timestamptz`: o banco guarda em UTC e o frontend formata no f
 <!-- escrever: por que o aparelho fica na conexão e não numa tabela própria, e a diferença
 entre connected_at (quando aconteceu) e received_at (quando chegou no banco). -->
 
+O _phone_, celular, fica na entidade de conexão e não isolada numa tabela própria, pois pode ocorrer de um usuário trocar o número, utilizar o mesmo CPF e podermos fazer a vinculação.
+
+_connected_at_ e _received_at_ existem pois o RabbitMQ está participando do processo fazendo fila para registro entre a API e a Base de dados, guardando os dados reais para possível decisão estratégica e correta do registro.
+
 ### Consultas do dashboard
 
 As consultas estão em `infra/persistence/typeorm-connection.repository.ts`, em SQL direto.
-
-<!-- escrever: as decisões de SQL que valem destaque:
-- LEFT JOIN com o filtro de data no ON, pra loja sem visita não sumir da lista
-- COUNT(DISTINCT visitor_id): visitante único é pessoa, não aparelho
-- ARRAY_AGG(connected_at ORDER BY connected_at) pra coluna "Dias e horários"
-- JOIN LATERAL ... LIMIT 1 pro último aparelho de cada pessoa
-- ILIKE com % e _ escapados na busca -->
 
 ## Tratamento de erros
 
