@@ -64,7 +64,11 @@ sequenceDiagram
     end
 ```
 
-Como estou utilizando um banco de dados em nuvem, acredito ser importante, dependendo da viabilidade técnica e dos limites de custo, a implementação de uma ferramenta de filas, para picos de conexão de usuários, como o número de lojas reais ultrapassa 4000 e a possível queda do banco de dados em nuvem, mesmo que o downtime seja baixíssimo.
+A fila fica entre o registro e a gravação por três motivos: absorver picos de conexão, já que o número de lojas reais ultrapassa 4000 e muitas pessoas conectam ao mesmo tempo (ex.: sábado à tarde); responder rápido ao portal com **202**, sem esperar a gravação no banco; e não perder conexões se o banco cair, pois a mensagem fica na fila até o consumer conseguir gravar.
+
+### Idempotência
+
+O RabbitMQ entrega cada mensagem pelo menos uma vez, então a mesma conexão pode chegar repetida. Por isso o id da conexão é gerado na API antes de publicar, e a gravação usa `ON CONFLICT (id) DO NOTHING`: uma entrega repetida não duplica a visita. O upsert do visitante pelo celular também pode se repetir sem problema.
 
 ## Contratos compartilhados
 

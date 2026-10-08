@@ -93,7 +93,7 @@ erDiagram
 
 Os horários são `timestamptz`: o banco guarda em UTC e o frontend formata no fuso de quem está vendo.
 
-O _phone_, celular, fica na entidade de conexão e não isolada numa tabela própria, pois pode ocorrer de um usuário trocar o número, utilizar o mesmo CPF e podermos fazer a vinculação.
+O aparelho (MAC, tipo e sistema) fica na própria conexão, e não numa tabela própria, pois ele é um detalhe de cada acesso: o dashboard só mostra o último aparelho usado por cada pessoa, então uma tabela separada traria um join a mais sem ganho.
 
 _connected_at_ e _received_at_ existem pois o RabbitMQ está participando do processo fazendo fila para registro entre a API e a Base de dados, guardando os dados reais para possível decisão estratégica e correta do registro.
 
