@@ -1,4 +1,4 @@
-# A solução
+# A solução e decisões técnicas
 
 [← Voltar ao README](../README.md)
 
@@ -31,6 +31,43 @@ O CPF é opcional, para ficar de acordo com possíveis termos de LGPD, porém ca
 ## O captive portal
 
 Realizei a simulação de um simples captive portal para acesso ao Wi-Fi, para demonstração visual das métricas e possibilidades imaginadas para a solução, demonstrando visualmente também a questão do CPF mencionada anteriormente, como métrica, resguardados a complexidade e restrições/possibilidades técnicas de aplicação real para usuários finais.
+
+## Decisões técnicas
+
+### Produto
+
+- **Visitante identificado pelo celular, e não pelo CPF nem pelo aparelho.**
+- **CPF opcional, oferecido em troca do clube de vantagens.**
+- **CPF mascarado na API, celular exibido completo.**
+- **Indicadores sempre nos últimos 12 meses; filtro de período só na tabela de visitantes.**
+
+### Arquitetura
+
+- **Fila (RabbitMQ) entre o registro e a gravação, com resposta 202.**
+- **Id da conexão gerado na API, antes de publicar (idempotência).**
+- **Arquitetura hexagonal no backend.**
+- **Contratos Zod compartilhados entre backend e frontend.**
+- **Validação dupla: formato na borda (Zod) e regras no domínio.**
+
+### Dados
+
+- **CPF opcional e sem `unique`.**
+- **CPF mantido quando a pessoa volta sem informar (`COALESCE` no upsert).**
+- **Aparelho guardado na conexão, sem tabela própria.**
+- **Período máximo de 366 dias nas consultas.**
+- **SQL direto nas consultas de métrica, em vez do query builder.**
+- **`DB_SYNC` (schema gerado pelas entidades) em vez de migrations.**
+
+### Frontend
+
+- **Rotas sem biblioteca (History API).**
+- **Respostas da API validadas pelo contrato.**
+- **date-fns para formatar dias e horários.**
+
+## Limitações conhecidas
+
+- **Dados pessoais sem criptografia no banco:** CPF e celular são armazenados em texto puro. Hoje a proteção está na API, que nunca devolve o CPF completo (sempre mascarado). Como evolução, os campos seriam criptografados e o CPF ganharia um hash para permitir a busca, já que hoje ele é indexado.
+- **Sem dead-letter queue:** quando a gravação de uma conexão falha por um erro que não é de domínio (por exemplo, banco fora do ar), a mensagem volta para a fila a cada 2 segundos, sem limite de tentativas. Isso garante que nada se perca em uma queda temporária, mas um erro permanente faria a mensagem circular indefinidamente. Como evolução, o consumer contaria as tentativas e, após N falhas, moveria a mensagem para uma fila onde poderia ser analisada e reprocessada.
 
 ## Próximos passos
 

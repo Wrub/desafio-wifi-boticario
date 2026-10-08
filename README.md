@@ -68,10 +68,9 @@ São 102 testes: 13 nos contratos (schemas), 48 no backend e 41 no frontend.
 
 ## Documentação
 
-- [A solução](docs/solucao.md): o problema, as métricas escolhidas e o porquê
+- [A solução e decisões técnicas](docs/solucao.md): o problema, as métricas, as decisões e as limitações
 - [Arquitetura](docs/arquitetura.md): visão geral, fluxo de uma conexão e contratos compartilhados
 - [Backend](docs/backend.md): camadas, modelo de dados, tratamento de erros e configuração
 - [Frontend](docs/frontend.md): telas, rotas e organização do código
 - [API](docs/api.md): rotas, parâmetros e exemplos
-- [Decisões técnicas](docs/decisoes.md)
 - [Uso de IA no desenvolvimento](AI_USAGE.md)
