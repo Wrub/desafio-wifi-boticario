@@ -91,9 +91,6 @@ erDiagram
 
 Os horários são `timestamptz`: o banco guarda em UTC e o frontend formata no fuso de quem está vendo.
 
-<!-- escrever: por que o aparelho fica na conexão e não numa tabela própria, e a diferença
-entre connected_at (quando aconteceu) e received_at (quando chegou no banco). -->
-
 O _phone_, celular, fica na entidade de conexão e não isolada numa tabela própria, pois pode ocorrer de um usuário trocar o número, utilizar o mesmo CPF e podermos fazer a vinculação.
 
 _connected_at_ e _received_at_ existem pois o RabbitMQ está participando do processo fazendo fila para registro entre a API e a Base de dados, guardando os dados reais para possível decisão estratégica e correta do registro.
@@ -115,9 +112,6 @@ As consultas estão em `infra/persistence/typeorm-connection.repository.ts`, em 
 | Mensagem fora do contrato na fila                                | consumer            | descartada, com log                                      |
 | Erro de domínio ao gravar                                        | consumer            | descartada, com log                                      |
 | Outro erro ao gravar (ex.: banco fora)                           | consumer            | espera 2s e devolve a mensagem pra fila                  |
-
-<!-- escrever: por que validar duas vezes (Zod na borda, domínio nas regras) e por que o
-consumer não confia na mensagem. -->
 
 ## Configuração
 
@@ -145,9 +139,6 @@ Variáveis de ambiente (exemplo em `apps/backend/.env.example`):
 
 - **Seed** (`infra/persistence/seed/`): roda no boot quando as variáveis `SEED_*` estão ligadas. Cria 5 lojas e, com o banco vazio, as conexões de exemplo dos últimos 365 dias. Usa uma semente fixa, então gera sempre os mesmos dados, e passa pela entidade de domínio, então segue as mesmas regras de uma conexão real.
 - **Simulador** (`scripts/simulate-connections.mjs`): manda conexões pelo `POST /connections`, passando pela API, pela fila e pelo consumer. Uso: `node scripts/simulate-connections.mjs [quantidade] [urlDaApi]`.
-
-<!-- escrever: os padrões que o seed simula (loja "da pessoa", horários de pico, pessoas com
-dois aparelhos, parte sem CPF) e por quê. -->
 
 ## Testes
 

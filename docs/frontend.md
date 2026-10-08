@@ -1,5 +1,3 @@
-<!-- TODO: estrutura e seções organizadas. Falta escrever o conteúdo dos trechos marcados com "escrever" e apagar estes comentários antes da entrega. -->
-
 # Frontend
 
 [← Voltar ao README](../README.md)
@@ -36,8 +34,9 @@ Os indicadores da rede e das lojas usam sempre os últimos 12 meses; o filtro de
 - A mensagem de sucesso muda conforme a pessoa informou o CPF ou não.
 - O aparelho é simulado: MAC aleatório e tipo do aparelho tirado do user agent do navegador (no portal real, esses dados vêm do roteador).
 
-<!-- escrever: as decisões de UX (por que o filtro fica só na tabela, por que a faixa no celular,
-como os horários aparecem, o texto do clube de vantagens). Prints ajudam. -->
+O filtro de período fica somente atrelada a tabela, facilitando o acesso e a troca do filtro, deixando claro a qual componente o filtro tem atuação, já no mobile, as lojas através de uma navbar, facilita a compactação visual necessária para menor carga de informações em dispositivos móveis.
+
+![Mobile NavBar](./images/mobile-navbar.png)
 
 ## Organização do código
 
@@ -48,7 +47,7 @@ hooks/        busca de dados, debounce, rota da loja e cálculo do período
 pages/        DashboardPage e CaptivePortalPage
 utils/        formatação (números, datas, celular, CPF), filtro de lojas, aparelho simulado
 main.tsx      escolhe a página pelo caminho
-main.css      tema (cores e fonte)
+main.css      tema (tailwindcss)
 ```
 
 ## Comunicação com a API
@@ -59,8 +58,6 @@ main.css      tema (cores e fonte)
 - **`hooks/use-api-query.ts`:** controla carregando, erro e "tentar novamente", e cancela a requisição anterior quando os filtros mudam, pra uma resposta antiga não sobrescrever uma mais nova.
 
 O endereço da API vem de `VITE_API_URL`, definido no build (padrão `http://localhost:3000`).
-
-<!-- escrever: por que validar a resposta no frontend também. -->
 
 ## Estados da interface
 
