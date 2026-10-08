@@ -21,8 +21,10 @@ const STORE_WEIGHTS: Array<[string, number]> = [
   ['loja-orla', 1],
 ];
 
-// loja abre 10h e fecha 22h, pico no almoço e depois do trabalho
+// loja abre 8h e fecha 22h, pico no almoço e depois do trabalho
 const HOUR_WEIGHTS: Array<[number, number]> = [
+  [8, 1],
+  [9, 1.5],
   [10, 2],
   [11, 4],
   [12, 8],
@@ -37,9 +39,6 @@ const HOUR_WEIGHTS: Array<[number, number]> = [
   [21, 2],
 ];
 
-// peso de cada mês (janeiro = 0) pelo calendário do varejo: Natal, Dia das Mães, Black Friday,
-// Dia dos Namorados e dos Pais em alta; Carnaval e meses sem data comemorativa em baixa.
-// Somando por estação, o verão fica na frente por causa do Natal e das férias.
 const MONTH_WEIGHTS = [0.9, 0.8, 0.8, 0.9, 1.5, 1.1, 0.8, 1.0, 0.8, 0.9, 1.3, 1.8];
 
 // peso de cada dia da semana (domingo = 0): sábado é o dia mais cheio, segunda o mais vazio

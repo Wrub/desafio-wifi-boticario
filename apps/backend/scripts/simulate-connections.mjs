@@ -20,6 +20,8 @@ const PEOPLE_COUNT = Math.max(10, Math.round(count * 0.35));
 const DAYS_BACK = 365;
 const AREA_CODES = ['41', '11', '21', '48'];
 const HOUR_WEIGHTS = [
+  [8, 1],
+  [9, 1.5],
   [10, 2],
   [11, 4],
   [12, 8],

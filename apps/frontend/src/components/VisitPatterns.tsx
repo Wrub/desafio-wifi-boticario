@@ -143,7 +143,7 @@ function peak(items: BarItem[]): BarItem {
   return items.reduce((top, item) => (item.value > top.value ? item : top));
 }
 
-// loja abre de 10h às 22h: corta as horas vazias do começo e do fim do dia
+// loja abre de 8h às 22h: corta as horas vazias do começo e do fim do dia
 function trimEmptyEdges(items: BarItem[]): BarItem[] {
   const first = items.findIndex((item) => item.value > 0);
   const last = items.length - 1 - [...items].reverse().findIndex((item) => item.value > 0);

@@ -15,7 +15,6 @@ export const visitsSummarySchema = z.object({
 });
 export type VisitsSummary = z.infer<typeof visitsSummarySchema>;
 
-// Estações do hemisfério sul, pelo mês: verão = dez a fev, outono = mar a mai...
 export const SEASONS = ['verao', 'outono', 'inverno', 'primavera'] as const;
 export const seasonSchema = z.enum(SEASONS);
 export type Season = z.infer<typeof seasonSchema>;
