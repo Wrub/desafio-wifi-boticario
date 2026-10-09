@@ -1,7 +1,6 @@
 import { chartTooltip, type ChartProps } from '../utils/chart';
 import { formatNumber } from '../utils/format';
 
-// Colunas na ordem do tempo (ex.: horas do dia); o valor de cada uma fica no tooltip
 export function ColumnChart({ items, highlightKey }: ChartProps) {
   const max = Math.max(1, ...items.map((item) => item.value));
 

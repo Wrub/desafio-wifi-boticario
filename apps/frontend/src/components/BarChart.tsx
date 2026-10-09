@@ -1,7 +1,6 @@
 import { chartTooltip, type ChartProps } from '../utils/chart';
 import { formatNumber } from '../utils/format';
 
-// Barras horizontais, com o valor escrito no fim de cada barra
 export function BarChart({ items, highlightKey }: ChartProps) {
   const max = Math.max(1, ...items.map((item) => item.value));
 
