@@ -14,14 +14,14 @@ Uma visita a loja é categorizada como um acesso ao Wi-Fi, passando por um supos
 
 | Nível     | Métrica                                                |
 | --------- | ------------------------------------------------------ |
-| Rede      | Visitas na rede                                        |
-| Rede      | Visitantes únicos na rede                              |
-| Loja      | Visitas                                                |
-| Loja      | Visitantes únicos                                      |
-| Loja      | Visitas por pessoa                                     |
-| Rede      | Dia da semana, horário, mês e estação com mais visitas |
-| Loja      | Dia da semana, horário, mês e estação com mais visitas |
-| Visitante | Visitas, dias e horários de cada visita                |
+| Rede      | Acessos ao Wi-Fi na rede                               |
+| Rede      | Usuários únicos na rede                                |
+| Loja      | Acessos ao Wi-Fi                                       |
+| Loja      | Usuários únicos                                        |
+| Loja      | Acessos por pessoa                                     |
+| Rede      | Dia da semana, horário, mês e estação com mais acessos |
+| Loja      | Dia da semana, horário, mês e estação com mais acessos |
+| Visitante | Acessos, dias e horários de cada acesso                |
 | Visitante | Último aparelho usado                                  |
 
 ## Dados do visitante e LGPD
@@ -42,8 +42,21 @@ Realizei a simulação de um simples captive portal para acesso ao Wi-Fi, para d
   - Para permitir a identificação no cadastro do aplicativo, para campanha com push notifications, ou outras opções como SMS ou WhatsApp.
 - **CPF opcional, oferecido em troca do clube de vantagens.**
   - Seguindo a LGPD, não tornando o CPF obrigatório para acesso ao Wi-Fi, caso o usuário deseje informar e fazer parte de um possível clube de vantagens ou de ofertas, é possível atrelar isso a compra efetuada sobre este CPF e traçar a trajetória de comportamento do cliente.
-- **Indicadores sempre nos últimos 12 meses; filtro de período só na tabela de visitantes.**
-  - Para que stakeholders tenham uma visualização anual dos acessos, permitindo visualização sazonal [visualizar o tópico de implementações futuras](./solucao.md#próximos-passos)
+- **Indicadores sempre nos últimos 12 meses; filtros de período nos padrões de acesso e na tabela de usuários.**
+  - Os indicadores mantêm a visualização anual dos acessos, permitindo visualização sazonal [visualizar o tópico de implementações futuras](./solucao.md#próximos-passos). Os padrões de acesso podem ser filtrados em 30 dias ou 12 meses, para comparar o último mês com o último ano, e a tabela de usuários tem filtro próprio (Hoje, 7 dias, 30 dias ou 12 meses), cada filtro junto do componente em que atua.
+
+#### Indicadores/Métricas
+
+Inclui indicadores globais e por loja, para visitantes/acessos no Wi-Fi, podendo ser filtrado em 30 dias ou 12 meses.
+
+- **Hora mais acessada**:
+  - Traz um dado relevante para o stakeholder tomar decisões baseado na hora do dia, não necessariamente na hora específica, mas tras um panorama de horas mais acessadas e horas com maiores quantidades de acesso.
+- **Dia da semana mais acessado**:
+  - Um dos dados mais relevantes em termos de mapa de calor para tomadas de decisão, pois serve diretamente para realização de campanhas e outras ações para promoções e/ou approaches de marketing com outras ferramentas.
+- **Mês mais acessado**:
+  - Dado relevante para analisar possíveis datas especiais como Dias das mães, entre outros.
+- **Estação do ano mais acessada**:
+  - Possibilidade de vincular campanhas referentes a sasonalidade do ano, clima, entre outras variáveis, como por exemplo: Campanha de primavera, inverno, etc.
 
 ### Arquitetura
 
@@ -70,6 +83,7 @@ Realizei a simulação de um simples captive portal para acesso ao Wi-Fi, para d
 
 ## Limitações conhecidas
 
+- **Dashboard sem autenticação:** o dashboard e a API não exigem login, então qualquer pessoa com o link visualiza nome, celular e e-mail dos usuários (o CPF é sempre mascarado). Em produção, cada dono de loja acessaria com login e veria somente as próprias lojas, e o `POST /connections` teria limite de requisições.
 - **Dados pessoais sem criptografia no banco:** CPF e celular são armazenados em texto puro. Hoje a proteção está na API, que nunca devolve o CPF completo (sempre mascarado). Como evolução, os campos seriam criptografados e o CPF ganharia um hash para permitir a busca, já que hoje ele é indexado.
 - **Sem dead-letter queue:** quando a gravação de uma conexão falha por um erro que não é de domínio (por exemplo, banco fora do ar), a mensagem volta para a fila a cada 2 segundos, sem limite de tentativas. Isso garante que nada se perca em uma queda temporária, mas um erro permanente faria a mensagem circular indefinidamente. Como evolução, o consumer contaria as tentativas e, após N falhas, moveria a mensagem para uma fila onde poderia ser analisada e reprocessada.
 
