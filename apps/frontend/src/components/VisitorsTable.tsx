@@ -23,19 +23,19 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
 
   if (page.total === 0) {
     return (
-      <p className="rounded-md border border-dashed border-gray-300 p-6 text-center text-sm text-ink-500">
+      <p className="rounded-md border border-dashed border-sand-300 p-6 text-center text-sm text-ink-500">
         {search
-          ? `Nenhum visitante encontrado para "${search}".`
-          : 'Nenhum visitante nesta loja no período.'}
+          ? `Nenhum usuário encontrado para "${search}".`
+          : 'Nenhum acesso ao Wi-Fi desta loja no período.'}
       </p>
     );
   }
 
   return (
-    <div className="rounded-md border border-gray-200 bg-surface">
+    <div className="rounded-md border border-sand-200 bg-surface">
       <div className={`overflow-x-auto transition-opacity ${loading ? 'opacity-60' : ''}`}>
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-gray-200 bg-canvas text-xs tracking-wide text-ink-500 uppercase">
+          <thead className="border-b border-zinc-200 bg-zinc-100 text-xs tracking-wide text-ink-500 uppercase">
             <tr>
               <th scope="col" className="px-4 py-3 font-medium">
                 Nome
@@ -50,7 +50,7 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
                 E-mail
               </th>
               <th scope="col" className="px-4 py-3 text-right font-medium">
-                Visitas
+                Acessos
               </th>
               <th scope="col" className="px-4 py-3 font-medium">
                 Dias e horários
@@ -66,7 +66,7 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-sand-200">
             {page.items.map((visitor) => (
               <tr key={visitor.id}>
                 <td className="px-4 py-3 font-medium whitespace-nowrap text-ink-900">
@@ -105,17 +105,17 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
 
       <nav
         aria-label="Paginação"
-        className="flex items-center justify-between gap-2 border-t border-gray-200 px-4 py-3 text-sm"
+        className="flex items-center justify-between gap-2 border-t border-sand-200 px-4 py-3 text-sm"
       >
         <span className="text-ink-500">
-          {formatNumber(page.total)} visitantes · página {page.page} de {totalPages}
+          {formatNumber(page.total)} usuários · página {page.page} de {totalPages}
         </span>
         <div className="flex gap-2">
           <button
             type="button"
             disabled={page.page <= 1 || loading}
             onClick={() => onPageChange(page.page - 1)}
-            className="rounded-md border border-gray-300 px-4 py-1.5 font-medium text-ink-700 hover:bg-canvas disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-md border border-sand-300 px-4 py-1.5 font-medium text-ink-700 transition-colors enabled:hover:border-ink-900 enabled:hover:bg-ink-900 enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             Anterior
           </button>
@@ -123,7 +123,7 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
             type="button"
             disabled={page.page >= totalPages || loading}
             onClick={() => onPageChange(page.page + 1)}
-            className="rounded-md border border-gray-300 px-4 py-1.5 font-medium text-ink-700 hover:bg-canvas disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-md border border-sand-300 px-4 py-1.5 font-medium text-ink-700 transition-colors enabled:hover:border-ink-900 enabled:hover:bg-ink-900 enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             Próxima
           </button>
@@ -146,7 +146,7 @@ function VisitTimes({ times }: { times: string[] }) {
           <li
             key={iso}
             title={formatDateTime(iso)}
-            className="rounded bg-brand-50 px-2 py-0.5 text-xs whitespace-nowrap text-ink-700"
+            className="rounded bg-sand-200 px-2 py-0.5 text-xs whitespace-nowrap text-ink-700"
           >
             <span className="text-ink-400">{index + 1}ª</span> {formatWeekdayTime(iso)}
           </li>
@@ -157,7 +157,7 @@ function VisitTimes({ times }: { times: string[] }) {
           type="button"
           aria-expanded={expanded}
           onClick={() => setExpanded(!expanded)}
-          className="rounded px-1.5 py-0.5 text-xs font-medium text-brand-500 hover:underline"
+          className="rounded px-1.5 py-0.5 text-xs font-medium text-brand-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
         >
           {expanded ? 'ver menos' : `+${hidden}`}
         </button>
@@ -168,9 +168,9 @@ function VisitTimes({ times }: { times: string[] }) {
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div aria-hidden className="space-y-2 rounded-md border border-gray-200 bg-surface p-4">
+    <div aria-hidden className="space-y-2 rounded-md border border-sand-200 bg-surface p-4">
       {Array.from({ length: rows }, (_, i) => (
-        <div key={i} className="h-8 animate-pulse rounded bg-gray-200" />
+        <div key={i} className="h-8 animate-pulse rounded bg-sand-200" />
       ))}
     </div>
   );

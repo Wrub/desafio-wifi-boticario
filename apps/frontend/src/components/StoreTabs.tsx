@@ -2,7 +2,7 @@ import { useRef, useState, type KeyboardEvent } from 'react';
 import type { StoreSummary } from '@wifi/contracts';
 import { formatNumber } from '../utils/format';
 import { filterStores } from '../utils/store-filter';
-import { SearchInput } from './SearchInput';
+import { SearchFilter } from './SearchFilter';
 
 interface StoreTabsProps {
   stores: StoreSummary[];
@@ -39,7 +39,7 @@ export function StoreTabs({ stores, selectedId, onSelect, loading }: StoreTabsPr
 
   return (
     <div className="space-y-3">
-      <SearchInput
+      <SearchFilter
         label="Buscar loja"
         placeholder="Buscar loja ou cidade"
         value={search}
@@ -47,7 +47,7 @@ export function StoreTabs({ stores, selectedId, onSelect, loading }: StoreTabsPr
       />
 
       {visible.length === 0 ? (
-        <p className="rounded-md border border-dashed border-gray-300 p-4 text-center text-sm text-ink-500">
+        <p className="rounded-md border border-dashed border-sand-300 p-4 text-center text-sm text-ink-500">
           Nenhuma loja encontrada.
         </p>
       ) : (
@@ -78,8 +78,8 @@ export function StoreTabs({ stores, selectedId, onSelect, loading }: StoreTabsPr
                 onKeyDown={(event) => handleKeyDown(event, index)}
                 className={`flex w-full items-center justify-between gap-3 rounded-md border px-4 py-3 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
                   selected
-                    ? 'cursor-not-allowed border-ink-900 bg-surface shadow-[inset_4px_0_0_var(--color-accent-500)]'
-                    : 'border-transparent bg-surface hover:border-gray-200 hover:bg-canvas'
+                    ? 'cursor-not-allowed border-ink-900 bg-surface shadow-[inset_4px_0_0_var(--color-highlight-500)]'
+                    : 'border-transparent bg-surface hover:border-ink-900'
                 }`}
               >
                 <span className="min-w-0">
@@ -94,7 +94,7 @@ export function StoreTabs({ stores, selectedId, onSelect, loading }: StoreTabsPr
                   <span className="block text-sm font-semibold text-ink-900 tabular-nums">
                     {formatNumber(store.totalVisits)}
                   </span>
-                  <span className="block text-xs text-ink-500">visitas</span>
+                  <span className="block text-xs text-ink-500">acessos</span>
                 </span>
               </button>
             );
@@ -109,7 +109,7 @@ export function StoreTabsSkeleton() {
   return (
     <div aria-hidden className="space-y-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="h-16 animate-pulse rounded-md bg-gray-200" />
+        <div key={i} className="h-16 animate-pulse rounded-md bg-sand-200" />
       ))}
     </div>
   );

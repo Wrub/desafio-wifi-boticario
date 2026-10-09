@@ -7,7 +7,7 @@ import { useDebouncedValue } from '../hooks/use-debounced-value';
 import { ErrorState } from './ErrorState';
 import { KpiCard } from './KpiCard';
 import { PeriodSelector } from './PeriodSelector';
-import { SearchInput } from './SearchInput';
+import { SearchFilter } from './SearchFilter';
 import { STORE_PANEL_ID } from './StoreTabs';
 import { TableSkeleton, VisitorsTable } from './VisitorsTable';
 import { VisitPatterns } from './VisitPatterns';
@@ -55,48 +55,62 @@ export function StoreDetails({ store, onClose, mobileStoreSwitcher }: StoreDetai
         <button
           type="button"
           onClick={onClose}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-canvas focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+          className="inline-flex items-center gap-1 rounded-md border border-zinc-300 bg-surface py-1.5 pr-3 pl-2 text-sm font-medium text-ink-700 shadow-xs transition-colors hover:bg-zinc-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
         >
-          ← Todas as lojas
+          <svg aria-hidden viewBox="0 0 20 20" fill="currentColor" className="size-4">
+            <path
+              fillRule="evenodd"
+              d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Todas as lojas
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div id="store-kpis" className="grid gap-4 sm:grid-cols-3">
         <KpiCard
-          label="Visitas"
+          label="Acessos ao Wi-Fi"
           value={store.totalVisits}
           hint="Conexões ao Wi-Fi nos últimos 12 meses"
         />
         <KpiCard
-          label="Visitantes únicos"
+          label="Usuários únicos"
           value={store.uniqueVisitors}
-          hint="Pessoas diferentes (por celular)"
+          hint="Pessoas diferentes (por número de celular)"
         />
         <KpiCard
-          label="Visitas por pessoa"
+          label="Acessos por pessoa"
           value={visitsPerVisitor}
           fractionDigits={1}
-          hint="Quanto o cliente volta, em média"
+          hint="Quantas vezes cada pessoa acessa o Wi-Fi, em média"
         />
       </div>
 
-      <VisitPatterns title="Quando a loja é mais visitada" storeId={store.id} headingLevel="h3" />
+      <VisitPatterns
+        title="Quando o Wi-Fi da loja é mais acessado"
+        storeId={store.id}
+        headingLevel="h3"
+      />
 
       {mobileStoreSwitcher && <div className="lg:hidden">{mobileStoreSwitcher}</div>}
 
-      <div className="space-y-3">
+      <div id="store-visitors" className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-base font-semibold text-ink-900">Quem usou o Wi-Fi</h3>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <PeriodSelector value={period} onChange={setPeriod} />
           <div className="w-full sm:w-72">
-            <SearchInput
-              label="Buscar visitante"
+            <SearchFilter
+              label="Buscar usuário"
               placeholder="Buscar por nome ou e-mail"
               value={search}
               onChange={setSearch}
             />
           </div>
         </div>
-        <PeriodSelector value={period} onChange={setPeriod} />
 
         {visitors.error && <ErrorState message={visitors.error} onRetry={visitors.retry} />}
         {!visitors.error && !visitors.data && <TableSkeleton />}

@@ -3,12 +3,20 @@ import { PERIOD_LABELS, type Period } from '../hooks/period';
 interface PeriodSelectorProps {
   value: Period;
   onChange: (period: Period) => void;
+  options?: Period[];
+  // nome acessível do grupo, precisa ser diferente quando tem mais de um seletor na tela
+  label?: string;
 }
 
-export function PeriodSelector({ value, onChange }: PeriodSelectorProps) {
+export function PeriodSelector({
+  value,
+  onChange,
+  options = Object.keys(PERIOD_LABELS) as Period[],
+  label = 'Período',
+}: PeriodSelectorProps) {
   return (
-    <div role="group" aria-label="Período" className="inline-flex rounded-md bg-brand-50 p-1">
-      {(Object.keys(PERIOD_LABELS) as Period[]).map((period) => (
+    <div role="group" aria-label={label} className="inline-flex rounded-md bg-zinc-200 p-1">
+      {options.map((period) => (
         <button
           key={period}
           type="button"

@@ -116,9 +116,9 @@ export function CaptivePortalPage() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <div className="bg-accent-500/10 px-4 py-2 text-center text-xs text-ink-700">
+      <div className="bg-sand-200 px-4 py-2 text-center text-xs text-ink-700">
         Simulação do captive portal ·{' '}
-        <a href="/" className="font-medium underline">
+        <a href="/" className="font-medium underline transition-colors hover:text-brand-500">
           voltar ao dashboard
         </a>
       </div>
@@ -133,7 +133,7 @@ export function CaptivePortalPage() {
         {stores.error ? (
           <ErrorState message={stores.error} onRetry={stores.retry} />
         ) : !stores.data ? (
-          <div aria-hidden className="h-96 animate-pulse rounded-md bg-gray-200" />
+          <div aria-hidden className="h-96 animate-pulse rounded-md bg-sand-200" />
         ) : !store ? (
           <p className="rounded-md bg-surface p-6 text-center text-sm text-ink-500 shadow-sm">
             Nenhuma loja cadastrada.
@@ -160,19 +160,19 @@ export function CaptivePortalPage() {
                 CPF.
               </p>
             )}
-            <div className="space-y-2 border-t border-gray-100 pt-4 text-xs text-ink-500">
-              <p>Simulação: a visita aparece no dashboard em instantes.</p>
+            <div className="space-y-2 border-t border-sand-100 pt-4 text-xs text-ink-500">
+              <p>Simulação: o acesso aparece no dashboard em instantes.</p>
               <div className="flex flex-wrap justify-center gap-2">
                 <a
                   href={storePath(store.id)}
-                  className="rounded-md border border-gray-300 px-3 py-1.5 font-medium text-ink-700 hover:bg-canvas"
+                  className="rounded-md border border-sand-300 px-3 py-1.5 font-medium text-ink-700 transition-colors hover:border-ink-900 hover:bg-ink-900 hover:text-white"
                 >
                   Ver no dashboard
                 </a>
                 <button
                   type="button"
                   onClick={reset}
-                  className="rounded-md border border-gray-300 px-3 py-1.5 font-medium text-ink-700 hover:bg-canvas"
+                  className="rounded-md border border-sand-300 px-3 py-1.5 font-medium text-ink-700 transition-colors hover:border-ink-900 hover:bg-ink-900 hover:text-white"
                 >
                   Simular outra conexão
                 </button>
@@ -213,7 +213,7 @@ export function CaptivePortalPage() {
               error={errors.email}
             />
 
-            <fieldset className="space-y-3 rounded-md border border-brand-100 bg-brand-50/60 p-4">
+            <fieldset className="space-y-3 rounded-md border border-sand-300 bg-sand-50 p-4">
               <legend className="px-1 text-sm font-semibold text-ink-900">
                 Clube de vantagens <span className="font-normal text-ink-500">(opcional)</span>
               </legend>
@@ -259,7 +259,7 @@ export function CaptivePortalPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-md bg-ink-900 px-4 py-3 font-semibold text-white hover:bg-ink-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:opacity-60"
+              className="w-full rounded-md bg-ink-900 px-4 py-3 font-semibold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 enabled:hover:bg-ink-700 disabled:opacity-60"
             >
               {submitting ? 'Conectando…' : 'Conectar'}
             </button>
@@ -267,13 +267,13 @@ export function CaptivePortalPage() {
         )}
 
         {stores.data && stores.data.length > 0 && (
-          <div className="mt-6 space-y-2 rounded-md border border-dashed border-gray-300 p-4 text-xs text-ink-500">
+          <div className="mt-6 space-y-2 rounded-md border border-dashed border-sand-300 p-4 text-xs text-ink-500">
             <label className="flex items-center justify-between gap-3">
               <span>Loja (simulação)</span>
               <select
                 value={store?.id}
                 onChange={(event) => changeStore(event.target.value)}
-                className="rounded-md border border-gray-300 bg-surface px-2 py-1 text-ink-900"
+                className="rounded-md border border-sand-300 bg-surface px-2 py-1 text-ink-900"
               >
                 {stores.data.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -317,7 +317,7 @@ function TextField({ label, value, onChange, hint, error, ...inputProps }: TextF
         aria-invalid={Boolean(error)}
         aria-describedby={describedBy}
         className={`mt-1 w-full rounded-md border bg-surface px-3 py-2 text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-brand-100 focus:outline-none ${
-          error ? 'border-red-500' : 'border-gray-300 focus:border-brand-500'
+          error ? 'border-red-500' : 'border-sand-300 focus:border-brand-500'
         }`}
         {...inputProps}
       />

@@ -116,7 +116,7 @@ describe('DashboardPage: grade de lojas', () => {
 
     const panel = screen.getByRole('tabpanel', { name: 'Shopping Norte' });
     const perPersonCard = within(panel)
-      .getByRole('heading', { name: 'Visitas por pessoa' })
+      .getByRole('heading', { name: 'Acessos por pessoa' })
       .closest('article')!;
     expect(perPersonCard).toHaveTextContent('2,7'); // 80 / 30
     expect(await within(panel).findByText('Maria Souza')).toBeInTheDocument();
@@ -170,6 +170,19 @@ function daysBetween({ from, to }: { from: Date; to: Date }) {
 }
 
 describe('DashboardPage: loja selecionada', () => {
+  it('recolhe e mostra de novo a lista de lojas', async () => {
+    renderStorePage(fakeApi(), 'loja-shopping');
+    await screen.findByRole('tab', { name: /Shopping Norte/ });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Recolher lista de lojas' }));
+    expect(screen.queryByRole('tab', { name: /Shopping Norte/ })).not.toBeInTheDocument();
+
+    const show = screen.getByRole('button', { name: 'Mostrar lista de lojas' });
+    expect(show).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(show);
+    expect(screen.getByRole('tab', { name: /Shopping Norte/ })).toBeInTheDocument();
+  });
+
   it('abre direto a loja do link /lojas/<id>', async () => {
     const api = fakeApi();
     renderStorePage(api, 'loja-shopping');
@@ -271,7 +284,7 @@ describe('DashboardPage: loja selecionada', () => {
     renderStorePage(api);
     await screen.findByText('Maria Souza');
 
-    await userEvent.type(screen.getByRole('searchbox', { name: 'Buscar visitante' }), 'maria');
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Buscar usuário' }), 'maria');
 
     // espera o debounce e confere a request com a busca
     await vi.waitFor(() =>
@@ -283,19 +296,49 @@ describe('DashboardPage: loja selecionada', () => {
     );
   });
 
+  it('limpa a busca pelo botão X', async () => {
+    const api = fakeApi();
+    renderStorePage(api);
+    await screen.findByText('Maria Souza');
+
+    const search = screen.getByRole('searchbox', { name: 'Buscar usuário' });
+    expect(screen.queryByRole('button', { name: 'Limpar busca' })).not.toBeInTheDocument();
+    await userEvent.type(search, 'maria');
+    await vi.waitFor(() =>
+      expect(api.listStoreVisitors).toHaveBeenLastCalledWith(
+        'loja-centro',
+        expect.objectContaining({ search: 'maria' }),
+        expect.any(AbortSignal),
+      ),
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Limpar busca' }));
+
+    expect(search).toHaveValue('');
+    expect(search).toHaveFocus();
+    await vi.waitFor(() =>
+      expect(api.listStoreVisitors).toHaveBeenLastCalledWith(
+        'loja-centro',
+        expect.objectContaining({ search: '' }),
+        expect.any(AbortSignal),
+      ),
+    );
+  });
+
   it('tabela de visitantes começa no maior período e o filtro só mexe nela', async () => {
     const api = fakeApi();
     renderStorePage(api);
     await screen.findByText('Maria Souza');
 
-    expect(screen.getByRole('button', { name: '12 meses' })).toHaveAttribute(
+    const tablePeriod = screen.getByRole('group', { name: 'Período' });
+    expect(within(tablePeriod).getByRole('button', { name: '12 meses' })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
     expect(daysBetween(vi.mocked(api.listStoreVisitors).mock.lastCall![1])).toBeGreaterThan(364);
     const storesCalls = vi.mocked(api.listStores).mock.calls.length;
 
-    await userEvent.click(screen.getByRole('button', { name: '7 dias' }));
+    await userEvent.click(within(tablePeriod).getByRole('button', { name: '7 dias' }));
 
     const lastQuery = vi.mocked(api.listStoreVisitors).mock.lastCall![1];
     expect(daysBetween(lastQuery)).toBeLessThan(7);
@@ -340,8 +383,8 @@ describe('DashboardPage: loja selecionada', () => {
     renderStorePage(fakeApi({ listStoreVisitors }));
     await screen.findByText('Maria Souza');
 
-    await userEvent.type(screen.getByRole('searchbox', { name: 'Buscar visitante' }), 'zzz');
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Buscar usuário' }), 'zzz');
 
-    expect(await screen.findByText('Nenhum visitante encontrado para "zzz".')).toBeInTheDocument();
+    expect(await screen.findByText('Nenhum usuário encontrado para "zzz".')).toBeInTheDocument();
   });
 });

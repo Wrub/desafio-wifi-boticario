@@ -6,7 +6,7 @@ import { ListStores } from './list-stores.js';
 const october = { from: new Date('2026-10-01T00:00:00Z'), to: new Date('2026-10-07T23:59:59Z') };
 
 describe('ListStores', () => {
-  it('lista todas as lojas, mais visitadas primeiro, inclusive as sem visita', async () => {
+  it('lista todas as lojas, com mais acessos primeiro, inclusive as sem acesso', async () => {
     const repository = new InMemoryConnectionRepository([
       { id: 'loja-centro', name: 'Centro', city: 'Curitiba' },
       { id: 'loja-batel', name: 'Batel', city: 'Curitiba' },

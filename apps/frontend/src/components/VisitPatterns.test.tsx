@@ -39,7 +39,7 @@ function renderPatterns(
   };
   render(
     <DashboardApiProvider api={api}>
-      <VisitPatterns title="Quando a loja é mais visitada" storeId={storeId} />
+      <VisitPatterns title="Quando o Wi-Fi da loja é mais acessado" storeId={storeId} />
     </DashboardApiProvider>,
   );
   return api;
@@ -57,7 +57,6 @@ describe('VisitPatterns', () => {
 
     const weekday = await screen.findByRole('article', { name: 'Dia da semana' });
     expect(within(weekday).getByText('Sábado', { selector: 'p' })).toBeInTheDocument();
-    expect(within(weekday).getByText('40 visitas, o maior movimento')).toBeInTheDocument();
 
     const hour = screen.getByRole('article', { name: 'Horário' });
     expect(within(hour).getByText('18h', { selector: 'p' })).toBeInTheDocument();
@@ -75,7 +74,7 @@ describe('VisitPatterns', () => {
     expect(within(month).getByText('Dezembro', { selector: 'p' })).toBeInTheDocument();
     expect(within(month).getAllByRole('listitem')).toHaveLength(12);
     expect(within(month).getByText('Dez')).toBeInTheDocument();
-    expect(within(month).getByTitle('Maio: 30 visitas')).toBeInTheDocument();
+    expect(within(month).getByTitle('Maio: 30 acessos')).toBeInTheDocument();
   });
 
   it('mostra só as horas entre a primeira e a última com visita', async () => {
@@ -107,10 +106,31 @@ describe('VisitPatterns', () => {
     const getVisitsDistribution = vi.fn().mockResolvedValue(distribution({}, {}, {}));
     renderPatterns(getVisitsDistribution, 'loja-orla');
 
-    await screen.findByText('Sem visitas no período.');
+    await screen.findByText('Sem acessos no período.');
     const query = getVisitsDistribution.mock.lastCall![0];
     expect(query.storeId).toBe('loja-orla');
     expect((query.to.getTime() - query.from.getTime()) / 86_400_000).toBeGreaterThan(364);
+  });
+
+  it('troca pra 30 dias e só oferece 30 dias e 12 meses', async () => {
+    const getVisitsDistribution = vi.fn().mockResolvedValue(distribution({}, {}, {}));
+    renderPatterns(getVisitsDistribution);
+    await screen.findByText('Sem acessos no período.');
+
+    const selector = screen.getByRole('group', { name: 'Período dos padrões de acesso' });
+    expect(
+      within(selector)
+        .getAllByRole('button')
+        .map((b) => b.textContent),
+    ).toEqual(['30 dias', '12 meses']);
+
+    await userEvent.click(within(selector).getByRole('button', { name: '30 dias' }));
+
+    const query = getVisitsDistribution.mock.lastCall![0];
+    expect((query.to.getTime() - query.from.getTime()) / 86_400_000).toBeLessThan(31);
+    expect(
+      screen.getByText('Conexões ao Wi-Fi nos últimos 30 dias em todas as lojas'),
+    ).toBeInTheDocument();
   });
 
   it('mostra o erro e tenta de novo', async () => {

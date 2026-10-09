@@ -14,7 +14,7 @@ interface BarChartProps {
   highlightKey?: string | number;
 }
 
-const tooltip = (item: BarItem) => `${item.label}: ${formatNumber(item.value)} visitas`;
+const tooltip = (item: BarItem) => `${item.label}: ${formatNumber(item.value)} acessos`;
 
 // Barras horizontais, com o valor escrito no fim de cada barra
 export function BarList({ items, highlightKey }: BarChartProps) {
@@ -31,7 +31,7 @@ export function BarList({ items, highlightKey }: BarChartProps) {
           <span className="text-ink-500">{item.label}</span>
           <span className="h-4">
             <span
-              className={`block h-full rounded-r ${item.key === highlightKey ? 'bg-brand-500' : 'bg-brand-100'}`}
+              className={`block h-full rounded-r ${item.key === highlightKey ? 'bg-brand-500' : 'bg-zinc-300'}`}
               style={{ width: `${(item.value / max) * 100}%` }}
             />
           </span>
@@ -56,12 +56,12 @@ export function ColumnList({ items, highlightKey }: BarChartProps) {
         >
           <span className="flex w-full flex-1 items-end justify-center">
             <span
-              className={`block w-full max-w-6 rounded-t ${item.key === highlightKey ? 'bg-brand-500' : 'bg-brand-100'}`}
+              className={`block w-full max-w-6 rounded-t ${item.key === highlightKey ? 'bg-brand-500' : 'bg-zinc-300'}`}
               style={{ height: `${(item.value / max) * 100}%` }}
             />
           </span>
           <span className="mt-1 text-[10px] text-ink-500">{item.shortLabel ?? item.label}</span>
-          <span className="sr-only">{formatNumber(item.value)} visitas</span>
+          <span className="sr-only">{formatNumber(item.value)} acessos</span>
         </li>
       ))}
     </ol>

@@ -49,7 +49,7 @@ export class InMemoryConnectionRepository implements ConnectionRepository {
         ...(await this.getVisitsSummary({ ...period, storeId: store.id })),
       })),
     );
-    // mesma ordem do SQL: mais visitadas primeiro, empate pelo nome
+    // mesma ordem do SQL: com mais acessos primeiro, empate pelo nome
     return result.sort((a, b) => b.totalVisits - a.totalVisits || a.name.localeCompare(b.name));
   }
 
