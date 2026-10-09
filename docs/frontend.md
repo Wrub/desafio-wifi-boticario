@@ -19,13 +19,13 @@ O nginx devolve o `index.html` para qualquer rota desconhecida (`nginx.conf`), e
 
 ### Dashboard
 
-- **Rede:** visitas e visitantes únicos de todas as lojas.
-- **Loja:** visitas, visitantes únicos e visitas por pessoa.
-- **Padrões de visita:** dia da semana, horário, mês e estação com mais visitas, da rede (na tela inicial) e de cada loja. Cada um mostra o pico em destaque e as barras de todos os valores.
-- **Lista de lojas:** abas verticais no desktop, com navegação pelas setas do teclado; faixa horizontal acima da tabela no celular.
-- **Tabela de visitantes:** busca por nome ou e-mail, paginação, filtro de período (Hoje, 7 dias, 30 dias, 12 meses; padrão 12 meses), celular, CPF mascarado, número de visitas, dias e horários de cada visita, última conexão e último aparelho.
+- **Rede:** acessos ao Wi-Fi e usuários únicos de todas as lojas.
+- **Loja:** acessos ao Wi-Fi, usuários únicos e acessos por pessoa.
+- **Padrões de acesso:** dia da semana, horário, mês e estação com mais acessos, da rede (na tela inicial) e de cada loja, com filtro de 30 dias ou 12 meses (padrão 12 meses). Cada um mostra o pico em destaque e as barras de todos os valores.
+- **Lista de lojas:** abas verticais no desktop, com navegação pelas setas do teclado, que podem ser recolhidas para ampliar a área da loja; faixa horizontal acima da tabela no celular.
+- **Tabela de usuários:** busca por nome ou e-mail (com botão para limpar), paginação, filtro de período (Hoje, 7 dias, 30 dias, 12 meses; padrão 12 meses), celular, CPF mascarado, número de acessos, dias e horários de cada acesso, última conexão e último aparelho.
 
-Os indicadores e os padrões de visita, da rede e das lojas, usam sempre os últimos 12 meses; o filtro de período vale só para a tabela.
+Os indicadores, da rede e das lojas, usam sempre os últimos 12 meses. Os padrões de acesso e a tabela têm, cada um, o próprio filtro de período.
 
 ### Captive portal
 
@@ -35,7 +35,7 @@ Os indicadores e os padrões de visita, da rede e das lojas, usam sempre os últ
 - A mensagem de sucesso muda conforme a pessoa informou o CPF ou não.
 - O aparelho é simulado: MAC aleatório e tipo do aparelho tirado do user agent do navegador (no portal real, esses dados vêm do roteador).
 
-O filtro de período fica somente atrelada a tabela, facilitando o acesso e a troca do filtro, deixando claro a qual componente o filtro tem atuação, já no mobile, as lojas através de uma navbar, facilita a compactação visual necessária para menor carga de informações em dispositivos móveis.
+Cada filtro de período fica junto do componente em que atua (padrões de acesso e tabela), facilitando o acesso e a troca do filtro, deixando claro a qual componente o filtro tem atuação, já no mobile, as lojas através de uma navbar, facilita a compactação visual necessária para menor carga de informações em dispositivos móveis.
 
 ![Mobile NavBar](./images/mobile-navbar.png)
 

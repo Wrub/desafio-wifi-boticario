@@ -1,5 +1,3 @@
-<!-- TODO: rotas e exemplos organizados. Falta revisar o conteúdo e apagar este comentário antes da entrega. -->
-
 # API
 
 [← Voltar ao README](../README.md)
@@ -28,17 +26,17 @@ As rotas de consulta recebem o período em `from` e `to` (data ISO 8601). O per�
 
 Registra uma conexão. A API valida, publica na fila e responde **202** antes de gravar; a conexão aparece no dashboard logo depois, quando o consumer grava no banco.
 
-| Campo               | Obrigatório | Regra                                                                     |
-| ------------------- | ----------- | ------------------------------------------------------------------------- |
-| `storeId`           | sim         | id de uma loja existente (ex.: `loja-centro`)                             |
-| `visitor.name`      | sim         | 2 a 120 caracteres                                                        |
-| `visitor.phone`     | sim         | celular BR: DDD + 9 dígitos começando com 9, com ou sem `+55` e pontuação |
-| `visitor.email`     | sim         | e-mail válido                                                             |
-| `visitor.cpf`       | não         | 11 dígitos, com ou sem pontuação, com dígito verificador válido           |
-| `device.macAddress` | sim         | `AA:BB:CC:DD:EE:FF` ou `AA-BB-CC-DD-EE-FF`                                |
-| `device.type`       | sim         | `smartphone`, `tablet`, `laptop` ou `other`                               |
-| `device.os`         | não         | até 40 caracteres                                                         |
-| `connectedAt`       | não         | data ISO 8601; padrão é o momento da requisição; não pode ser futura      |
+| Campo               | Obrigatório | Regra                                                                |
+| ------------------- | ----------- | -------------------------------------------------------------------- |
+| `storeId`           | sim         | id de uma loja existente (ex.: `loja-centro`)                        |
+| `visitor.name`      | sim         | 2 a 120 caracteres                                                   |
+| `visitor.phone`     | sim         | celular BR: DDD + 9 dígitos, com ou sem `+55` e pontuação            |
+| `visitor.email`     | sim         | e-mail válido                                                        |
+| `visitor.cpf`       | não         | 11 dígitos, com ou sem pontuação, com dígito verificador válido      |
+| `device.macAddress` | sim         | `AA:BB:CC:DD:EE:FF` ou `AA-BB-CC-DD-EE-FF`                           |
+| `device.type`       | sim         | `smartphone`, `tablet`, `laptop` ou `other`                          |
+| `device.os`         | não         | até 40 caracteres                                                    |
+| `connectedAt`       | não         | data ISO 8601; padrão é o momento da requisição; não pode ser futura |
 
 ```bash
 curl -X POST https://desafio-wifi-boticario-backend.onrender.com/connections \
@@ -129,7 +127,7 @@ O exemplo mostra só parte de `byWeekday`, `byHour` e `byMonth`; a resposta real
 | `from`    | sim         | início do período |
 | `to`      | sim         | fim do período    |
 
-Devolve todas as lojas, inclusive as sem visita no período, das mais visitadas para as menos.
+Devolve todas as lojas, inclusive as sem acesso ao Wi-Fi no período, da com mais acessos para a com menos.
 
 ```json
 [
@@ -202,4 +200,4 @@ Todos os erros seguem o mesmo formato:
 | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | 400    | formato inválido (com `issues`) ou regra de negócio (CPF inválido, loja inexistente no registro, data futura, período maior que 366 dias) |
 | 404    | loja não encontrada na lista de visitantes                                                                                                |
-| 503    | RabbitMQ indisponível no registro, ou banco indisponível no `/health`                                                                     |
+| 503    | RabbitMQ indisponível no registro, ou banco de dados indisponível em qualquer rota                                                        |

@@ -13,7 +13,7 @@ connections/
     ports/
     use-cases/
   infra/           adapters: o que conversa com o mundo de fora
-    http/          controllers, validação (Zod) e filtro de erros
+    http/          controllers, validação (Zod) e filtros de erros
     messaging/     publisher e consumer do RabbitMQ
     persistence/   entidades do TypeORM, repositório e seed
   connections.module.ts   liga cada porta à sua implementação
@@ -105,17 +105,18 @@ Os padrões de visita (dia da semana, hora e mês) são contados no horário de 
 
 ## Tratamento de erros
 
-| Situação                                                         | Onde                | Resposta                                                 |
-| ---------------------------------------------------------------- | ------------------- | -------------------------------------------------------- |
-| Formato inválido (query, parâmetro, body)                        | `ZodValidationPipe` | 400 `{ statusCode, message: "Dados inválidos", issues }` |
-| Regra de negócio (CPF, celular, data, período acima de 366 dias) | `DomainErrorFilter` | 400 `{ statusCode, message }`                            |
-| Loja inexistente no `POST /connections`                          | `DomainErrorFilter` | 400                                                      |
-| Loja não encontrada no `GET /stores/:storeId/visitors`           | `DomainErrorFilter` | 404                                                      |
-| RabbitMQ indisponível ao publicar                                | `DomainErrorFilter` | 503                                                      |
-| Banco indisponível                                               | `GET /health`       | 503                                                      |
-| Mensagem fora do contrato na fila                                | consumer            | descartada, com log                                      |
-| Erro de domínio ao gravar                                        | consumer            | descartada, com log                                      |
-| Outro erro ao gravar (ex.: banco fora)                           | consumer            | espera 2s e devolve a mensagem pra fila                  |
+| Situação                                                         | Onde                        | Resposta                                                 |
+| ---------------------------------------------------------------- | --------------------------- | -------------------------------------------------------- |
+| Formato inválido (query, parâmetro, body)                        | `ZodValidationPipe`         | 400 `{ statusCode, message: "Dados inválidos", issues }` |
+| Regra de negócio (CPF, celular, data, período acima de 366 dias) | `DomainErrorFilter`         | 400 `{ statusCode, message }`                            |
+| Loja inexistente no `POST /connections`                          | `DomainErrorFilter`         | 400                                                      |
+| Loja não encontrada no `GET /stores/:storeId/visitors`           | `DomainErrorFilter`         | 404                                                      |
+| RabbitMQ indisponível ao publicar                                | `DomainErrorFilter`         | 503                                                      |
+| Banco indisponível em qualquer rota                              | `DatabaseUnavailableFilter` | 503 `{ statusCode, message }`                            |
+| Banco indisponível no `GET /health`                              | `HealthController`          | 503                                                      |
+| Mensagem fora do contrato na fila                                | consumer                    | descartada, com log                                      |
+| Erro de domínio ao gravar                                        | consumer                    | descartada, com log                                      |
+| Outro erro ao gravar (ex.: banco fora)                           | consumer                    | espera 2s e devolve a mensagem pra fila                  |
 
 ## Configuração
 

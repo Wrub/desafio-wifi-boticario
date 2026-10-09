@@ -18,7 +18,7 @@ export function DashboardPage() {
   const detailsRef = useRef<HTMLDivElement>(null);
   const [storeListOpen, setStoreListOpen] = useState(true);
 
-  // indicadores e lojas sempre no maior período, o filtro fica só na tabela de visitantes
+  // indicadores e lojas sempre nos 12 meses; padrões e tabela têm filtro próprio
   const summary = useApiQuery(
     (signal) => api.getVisitsSummary(periodToRange(MAX_PERIOD), signal),
     [api],
