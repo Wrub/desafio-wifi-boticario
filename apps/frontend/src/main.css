@@ -1,26 +1,37 @@
 @import 'tailwindcss';
 
-/*
-  Tema baseado no Grupo Boticário
-*/
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink-900: #001e3a;
-  --color-ink-700: #364372;
-  --color-ink-600: #45476b;
-  --color-ink-500: #525071;
-  --color-ink-400: #8a88a6;
+  --color-ink-50: #eef2f7;
+  --color-ink-100: #dde4ec;
+  --color-ink-400: #7a8ca1;
+  --color-ink-500: #4d6480;
+  --color-ink-600: #354f6e;
+  --color-ink-700: #233c5b;
+  --color-ink-900: #011e38;
 
-  --color-brand-50: #eef0f6;
-  --color-brand-100: #dde1ee;
-  --color-brand-500: #364372;
-  --color-brand-700: #001e3a;
+  --color-sand-50: #fbf9f6;
+  --color-sand-100: #f5f1eb;
+  --color-sand-200: #ece5da;
+  --color-sand-300: #ded4c4;
+  --color-sand-400: #c9baa2;
+  --color-sand-500: #a99579;
+  --color-sand-600: #86735a;
+  --color-sand-700: #64553f;
 
-  --color-accent-500: #ff4d00;
+  --color-brand-50: #e9f5f2;
+  --color-brand-100: #cde9e1;
+  --color-brand-500: #17776b;
+  --color-brand-700: #0f5e54;
 
-  --color-canvas: #eef1f5;
-  --color-surface: #f8f9fb;
+  --color-accent-500: #17776b;
+
+  --color-highlight-400: #ff7a00;
+  --color-highlight-500: #ff4d00;
+
+  --color-canvas: #f5f1eb;
+  --color-surface: #fffdfa;
 }
 
 body {
