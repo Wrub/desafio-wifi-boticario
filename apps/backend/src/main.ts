@@ -1,8 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { type MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module.js';
+import { DatabaseUnavailableFilter } from './connections/infra/http/database-unavailable.filter.js';
 import { DomainErrorFilter } from './connections/infra/http/domain-error.filter.js';
 import { WIFI_CONNECTIONS_QUEUE } from './connections/infra/messaging/rabbitmq.config.js';
 
@@ -12,7 +13,10 @@ async function bootstrap() {
 
   const frontendUrl = config.get<string>('FRONTEND_URL');
   app.enableCors({ origin: frontendUrl ? frontendUrl.split(',') : true });
-  app.useGlobalFilters(new DomainErrorFilter());
+  app.useGlobalFilters(
+    new DatabaseUnavailableFilter(app.get(HttpAdapterHost).httpAdapter),
+    new DomainErrorFilter(),
+  );
   app.enableShutdownHooks();
 
   app.connectMicroservice<MicroserviceOptions>({
