@@ -27,6 +27,14 @@ O nginx devolve o `index.html` para qualquer rota desconhecida (`nginx.conf`), e
 
 Os indicadores, da rede e das lojas, usam sempre os últimos 12 meses. Os padrões de acesso e a tabela têm, cada um, o próprio filtro de período.
 
+Tela inicial, com a visão da rede:
+
+![Tela inicial com os totais da rede, os padrões de acesso e a grade de lojas](./images/dashboard-rede.webp)
+
+Loja selecionada:
+
+![Loja selecionada com a lista de lojas, os indicadores, os padrões de acesso e a tabela de usuários](./images/dashboard-loja.webp)
+
 ### Captive portal
 
 - Campos obrigatórios: nome, celular e e-mail. Celular e CPF são formatados enquanto a pessoa digita.
@@ -35,9 +43,11 @@ Os indicadores, da rede e das lojas, usam sempre os últimos 12 meses. Os padrõ
 - A mensagem de sucesso muda conforme a pessoa informou o CPF ou não.
 - O aparelho é simulado: MAC aleatório e tipo do aparelho tirado do user agent do navegador (no portal real, esses dados vêm do roteador).
 
+<img src="./images/portal-celular.webp" alt="Captive portal no celular" width="320">
+
 Cada filtro de período fica junto do componente em que atua (padrões de acesso e tabela), facilitando o acesso e a troca do filtro, deixando claro a qual componente o filtro tem atuação, já no mobile, as lojas através de uma navbar, facilita a compactação visual necessária para menor carga de informações em dispositivos móveis.
 
-![Mobile NavBar](./images/mobile-navbar.png)
+<img src="./images/celular-lojas.webp" alt="Lojas em uma faixa horizontal acima da tabela, no celular" width="320">
 
 ## Escolhas de UX e UI
 

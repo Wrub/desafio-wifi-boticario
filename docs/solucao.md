@@ -31,14 +31,25 @@ Um acesso não é o mesmo que uma visita à loja: uma pessoa pode entrar na loja
 | Usuário     | Acessos, dias e horários de cada acesso                | histórico de cada cliente                                     |
 | Usuário     | Último aparelho usado                                  | perfil do cliente (celular, notebook ou tablet)               |
 
-### Padrões de acesso
+### Picos e sazonalidade dos acessos
 
-Os padrões aparecem para a rede e para cada loja, com o pico em destaque e as barras de todos os valores, podendo ser filtrados em 30 dias ou 12 meses.
+Os acessos são agrupados em quatro recortes de tempo (horário, dia da semana, mês e estação do ano), para a rede e para cada loja, nos últimos 30 dias ou 12 meses. Cada gráfico destaca o pico, mas mostra todos os valores, porque a distância entre o pico e os demais diz tanto quanto o próprio pico. As imagens abaixo são da visão da rede, com os dados de exemplo, nos últimos 12 meses.
 
-- **Horário mais acessado:** traz um dado relevante para o stakeholder tomar decisões baseadas na hora do dia, não necessariamente na hora específica, mas trazendo um panorama dos horários com mais e com menos acessos.
-- **Dia da semana mais acessado:** um dos dados mais relevantes em termos de mapa de calor para tomadas de decisão, pois serve diretamente para a realização de campanhas, promoções e outras ações de marketing.
-- **Mês mais acessado:** dado relevante para analisar datas especiais, como Dia das Mães, Dia dos Namorados, Black Friday e Natal.
-- **Estação do ano mais acessada:** possibilidade de vincular campanhas à sazonalidade do ano, ao clima, entre outras variáveis, como uma campanha de primavera ou de inverno.
+- **Horário mais acessado:** traz um dado relevante para o stakeholder tomar decisões baseadas na hora do dia, não necessariamente na hora específica, mas trazendo um panorama dos horários com mais e com menos acessos. No exemplo, o pico é às 18h, há um segundo pico no almoço (12h e 13h) e o começo da manhã tem pouco movimento: horários para reforçar a equipe e concentrar as ações na loja.
+
+  <img src="./images/padrao-horario.webp" alt="Acessos por horário, com pico às 18h" width="600">
+
+- **Dia da semana mais acessado:** um dos dados mais relevantes em termos de mapa de calor para tomadas de decisão, pois serve diretamente para a realização de campanhas, promoções e outras ações de marketing. No exemplo, sexta e sábado concentram 42% dos acessos, e o sábado tem 2,5 vezes os acessos da segunda-feira.
+
+  <img src="./images/padrao-dia-semana.webp" alt="Acessos por dia da semana, com pico no sábado" width="600">
+
+- **Mês mais acessado:** dado relevante para analisar datas especiais, como Dia das Mães, Dia dos Namorados, Black Friday e Natal. No exemplo, os três meses com mais acessos são dezembro (Natal), maio (Dia das Mães) e novembro (Black Friday).
+
+  <img src="./images/padrao-mes.webp" alt="Acessos por mês, com pico em dezembro" width="600">
+
+- **Estação do ano mais acessada:** possibilidade de vincular campanhas à sazonalidade do ano, ao clima, entre outras variáveis, como uma campanha de primavera ou de inverno. No exemplo, o verão lidera, mas a diferença entre as estações (19%) é bem menor que entre os meses (dezembro tem quase o triplo de fevereiro): as datas comemorativas pesam mais que a estação.
+
+  <img src="./images/padrao-estacao.webp" alt="Acessos por estação do ano, com pico no verão" width="600">
 
 ## Dados do usuário e LGPD
 

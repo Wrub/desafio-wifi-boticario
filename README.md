@@ -1,5 +1,7 @@
 # Desafio Fullstack Wi-fi Grupo Boticario
 
+![Dashboard com uma loja selecionada: lista de lojas, indicadores, padrões de acesso e tabela de usuários](docs/images/dashboard-loja.webp)
+
 ## Acessos
 
 > [!IMPORTANT]
