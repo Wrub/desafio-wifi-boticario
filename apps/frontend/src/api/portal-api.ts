@@ -7,7 +7,6 @@ import {
 } from '@wifi/contracts';
 import { periodParams, requestJson, type Period } from './http';
 
-// chamadas do captive portal: a lista de lojas e o login no Wi-Fi
 export interface PortalApi {
   listStores(period: Period, signal?: AbortSignal): Promise<StoreSummary[]>;
   registerConnection(body: RegisterConnectionRequest): Promise<RegisterConnectionResponse>;

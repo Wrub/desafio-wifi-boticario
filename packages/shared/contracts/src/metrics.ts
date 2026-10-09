@@ -21,7 +21,7 @@ export type Season = z.infer<typeof seasonSchema>;
 
 const visitsCount = z.number().int().nonnegative();
 
-// Visitas por dia da semana (0 = domingo), hora, mês (1 = janeiro) e estação, no horário de Brasília
+// Acessos por dia da semana (0 = domingo), hora, mês (1 = janeiro) e estação, no horário de Brasília
 export const visitsDistributionSchema = z.object({
   byWeekday: z
     .array(z.object({ weekday: z.number().int().min(0).max(6), visits: visitsCount }))

@@ -91,8 +91,7 @@ const DEVICE_OPTIONS: Array<[{ type: string; systems: Array<string | undefined> 
   [{ type: 'other', systems: [undefined] }, 0.5],
 ];
 
-// Random com semente (mulberry32): o seed gera sempre os mesmos dados,
-// fica mais fácil comparar o dashboard entre uma execução e outra.
+// random com semente (mulberry32): o seed gera sempre os mesmos dados
 function createRandom(seed: number) {
   let state = seed;
   const next = () => {

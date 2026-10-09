@@ -1,7 +1,6 @@
 import type { Device } from '@wifi/contracts';
 
-// No portal de verdade o MAC vem do roteador. Aqui é simulado:
-// MAC aleatório e tipo/sistema tirados do user agent do navegador.
+// no portal de verdade o MAC vem do roteador; aqui é aleatório e o tipo/sistema sai do user agent
 export function simulatedDevice(userAgent: string = navigator.userAgent): Device {
   const mac = Array.from({ length: 6 }, () =>
     Math.floor(Math.random() * 256)

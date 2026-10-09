@@ -20,7 +20,7 @@ interface VisitPatternsProps {
   headingLevel?: 'h2' | 'h3';
 }
 
-// Quando as pessoas usam o Wi-Fi: dia da semana, horário, mês e estação com mais visitas
+// Quando as pessoas usam o Wi-Fi: dia da semana, horário, mês e estação com mais acessos
 export function VisitPatterns({ title, storeId, headingLevel = 'h2' }: VisitPatternsProps) {
   const api = useDashboardApi();
   const [period, setPeriod] = useState<Period>(MAX_PERIOD);

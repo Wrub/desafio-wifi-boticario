@@ -7,7 +7,7 @@ import { DomainError } from '../../domain/domain.error.js';
 
 const RETRY_DELAY_MS = 2_000;
 
-// Lê a fila e chama o caso de uso SaveConnection. Ack manual, só depois de gravar.
+// ack manual: a mensagem só sai da fila depois de gravada no banco
 @Controller()
 export class ConnectionRegisteredConsumer {
   private readonly logger = new Logger(ConnectionRegisteredConsumer.name);

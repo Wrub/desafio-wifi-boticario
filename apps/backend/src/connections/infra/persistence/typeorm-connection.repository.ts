@@ -26,7 +26,7 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
   }
 
   async listStoresWithMetrics({ from, to }: MetricsPeriod): Promise<StoreWithMetrics[]> {
-    // LEFT JOIN com o filtro de data no ON, senão loja sem visita some da lista
+    // LEFT JOIN com o filtro de data no ON, senão loja sem acesso some da lista
     const rows: Array<{
       id: string;
       name: string;
@@ -88,7 +88,7 @@ export class TypeOrmConnectionRepository implements ConnectionRepository {
   }
 
   async getVisitsSummary({ from, to, storeId }: VisitsFilter): Promise<VisitsSummary> {
-    // visitante único = pessoa (CPF), não aparelho. Uma pessoa com celular e notebook conta 1.
+    // visitante único = pessoa (celular), não aparelho: quem usa celular e notebook conta 1
     const [row] = await this.dataSource.query(
       `SELECT COUNT(*) AS total_visits, COUNT(DISTINCT visitor_id) AS unique_visitors
        FROM wifi_connections

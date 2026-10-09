@@ -1,9 +1,4 @@
-// Simula clientes fazendo login no Wi-Fi das lojas (POST /connections).
-//
-// Uso:
-//   node scripts/simulate-connections.mjs [quantidade] [urlDaApi]
-//   node scripts/simulate-connections.mjs 300 http://localhost:3000
-//
+// Simula clientes fazendo login no Wi-Fi das lojas. Uso: node scripts/simulate-connections.mjs [quantidade] [urlDaApi]
 
 const count = Number(process.argv[2] ?? 200);
 const apiUrl = process.argv[3] ?? process.env.API_URL ?? 'http://localhost:3000';

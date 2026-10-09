@@ -22,7 +22,7 @@ describe('GetVisitsSummary', () => {
     repository = new InMemoryConnectionRepository();
     useCase = new GetVisitsSummary(repository);
 
-    // Maria vem 2x (celular e notebook), João 1x, e uma visita fora do período
+    // Maria vem 2x (celular e notebook), João 1x, e um acesso fora do período
     await repository.save(
       connection({ id: '1', visitor: maria, connectedAt: new Date('2026-10-02T10:00:00Z') }),
     );

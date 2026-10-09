@@ -17,7 +17,6 @@ const PAGE_SIZE = 10;
 interface StoreDetailsProps {
   store: StoreSummary;
   onClose: () => void;
-  // troca de loja que aparece só no celular, logo acima da tabela
   mobileStoreSwitcher?: ReactNode;
 }
 

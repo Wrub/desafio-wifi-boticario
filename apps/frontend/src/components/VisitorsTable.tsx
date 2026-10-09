@@ -8,7 +8,7 @@ import {
   formatWeekdayTime,
 } from '../utils/format';
 
-// quantas visitas aparecem antes do "+N"
+// quantos acessos aparecem antes do "+N"
 const VISIT_TIMES_PREVIEW = 3;
 
 interface VisitorsTableProps {
@@ -133,7 +133,7 @@ export function VisitorsTable({ page, onPageChange, loading, search }: VisitorsT
   );
 }
 
-// lista numerada das visitas (1ª, 2ª...), com a data completa no tooltip
+// lista numerada dos acessos (1ª, 2ª...), com a data completa no tooltip
 function VisitTimes({ times }: { times: string[] }) {
   const [expanded, setExpanded] = useState(false);
   const visible = expanded ? times : times.slice(0, VISIT_TIMES_PREVIEW);

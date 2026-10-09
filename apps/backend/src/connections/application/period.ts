@@ -5,7 +5,7 @@ export interface MetricsPeriod {
   to: Date;
 }
 
-// limite de solicitação de métricas para evitar sobrecarga do banco de dados
+// limite pra uma consulta de métrica não pesar demais no banco
 const MAX_PERIOD_DAYS = 366;
 
 export function assertValidPeriod({ from, to }: MetricsPeriod): void {

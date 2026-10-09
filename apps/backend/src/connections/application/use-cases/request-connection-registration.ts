@@ -13,7 +13,7 @@ export interface RequestConnectionRegistrationInput {
   connectedAt?: Date;
 }
 
-// Chamado pelo POST /connections. Valida e joga na fila, sem gravar no banco,
+// chamado pelo POST /connections: valida e joga na fila, quem grava no banco é o consumer
 export class RequestConnectionRegistration {
   constructor(
     private readonly publisher: ConnectionEventPublisher,

@@ -6,9 +6,7 @@ import { StoreOrmEntity } from '../store.orm-entity.js';
 import { WifiConnectionOrmEntity } from '../wifi-connection.orm-entity.js';
 import { DEMO_STORES, generateDemoConnections } from './demo-data.js';
 
-// Popula o banco no boot pra quem abrir o dashboard já ver dado.
-// As conexões vão direto pro banco, sem passar pela fila: aqui é carga inicial.
-// Pra testar o fluxo completo (API -> RabbitMQ -> banco) usar o scripts/simulate-connections.mjs.
+// carga inicial no boot, direto no banco sem passar pela fila (o fluxo completo é testado com o scripts/simulate-connections.mjs)
 @Injectable()
 export class DemoDataSeed implements OnApplicationBootstrap {
   private readonly logger = new Logger(DemoDataSeed.name);

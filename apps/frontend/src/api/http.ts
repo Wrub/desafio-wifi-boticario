@@ -39,7 +39,6 @@ export async function requestJson<T>(
     );
   }
 
-  // parse para validar se a resposta está de acordo com o schema de contract
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     console.error('Resposta fora do contrato', parsed.error);

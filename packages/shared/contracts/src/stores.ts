@@ -35,7 +35,7 @@ export const storeVisitorSchema = z.object({
   name: z.string(),
   // formato +5541999998888
   phone: z.string(),
-  // sempre masked vindo da API, fica null quando não informado
+  // sempre mascarado pela API, null quando a pessoa não informou
   maskedCpf: z.string().nullable(),
   email: z.string(),
   visits: z.number().int().positive(),

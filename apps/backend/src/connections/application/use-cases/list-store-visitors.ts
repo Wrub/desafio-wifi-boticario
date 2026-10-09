@@ -36,7 +36,6 @@ export class ListStoreVisitors {
     return {
       ...pagination,
       total,
-      // mascara do CPF
       items: items.map(({ visitorId, cpf, ...rest }) => ({
         ...rest,
         id: visitorId,
