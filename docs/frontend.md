@@ -88,10 +88,10 @@ Os cuidados de acessibilidade (papéis do ARIA e navegação pelo teclado) estã
 
 ```
 api/          cliente HTTP da API e o contexto que injeta ele nas telas
-components/   componentes visuais (cards, gráficos de barras, tabela, abas, faixa, filtro de período…)
+components/   componentes visuais (cards, gráficos de barras e de colunas, tabela, abas, faixa, filtro de período…)
 hooks/        busca de dados, debounce, rota da loja e cálculo do período
 pages/        DashboardPage e CaptivePortalPage
-utils/        formatação (números, datas, celular, CPF, dia da semana, estação), filtro de lojas, aparelho simulado
+utils/        formatação (números, datas, celular, CPF, dia da semana, estação), filtro de lojas, aparelho simulado, itens dos gráficos
 main.tsx      escolhe a página pelo caminho
 main.css      tema (tailwindcss)
 ```

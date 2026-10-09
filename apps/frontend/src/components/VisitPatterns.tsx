@@ -3,8 +3,10 @@ import type { VisitsDistribution } from '@wifi/contracts';
 import { useDashboardApi } from '../api/api-context';
 import { MAX_PERIOD, PERIOD_LABELS, periodToRange, type Period } from '../hooks/period';
 import { useApiQuery } from '../hooks/use-api-query';
+import type { ChartItem } from '../utils/chart';
 import { formatHour, MONTH_LABELS, SEASON_LABELS, WEEKDAY_LABELS } from '../utils/format';
-import { BarList, ColumnList, type BarItem } from './BarList';
+import { BarChart } from './BarChart';
+import { ColumnChart } from './ColumnChart';
 import { ErrorState } from './ErrorState';
 import { PeriodSelector } from './PeriodSelector';
 
@@ -105,13 +107,13 @@ function Patterns({ data, cardHeading }: { data: VisitsDistribution; cardHeading
         label="Dia da semana"
         peak={topWeekday}
       >
-        <BarList items={weekdays} highlightKey={topWeekday.key} />
+        <BarChart items={weekdays} highlightKey={topWeekday.key} />
       </PatternCard>
       <PatternCard id="pattern-hour" heading={cardHeading} label="Horário" peak={topHour}>
-        <ColumnList items={hours} highlightKey={topHour.key} />
+        <ColumnChart items={hours} highlightKey={topHour.key} />
       </PatternCard>
       <PatternCard id="pattern-month" heading={cardHeading} label="Mês" peak={topMonth}>
-        <ColumnList
+        <ColumnChart
           items={months.map((m) => ({ ...m, shortLabel: m.label.slice(0, 3) }))}
           highlightKey={topMonth.key}
         />
@@ -122,7 +124,7 @@ function Patterns({ data, cardHeading }: { data: VisitsDistribution; cardHeading
         label="Estação do ano"
         peak={topSeason}
       >
-        <BarList items={seasons} highlightKey={topSeason.key} />
+        <BarChart items={seasons} highlightKey={topSeason.key} />
       </PatternCard>
     </div>
   );
@@ -138,7 +140,7 @@ function PatternCard({
   id: string;
   heading: CardHeading;
   label: string;
-  peak: BarItem;
+  peak: ChartItem;
   children: ReactNode;
 }) {
   const headingId = `${id}-title`;
@@ -160,12 +162,12 @@ function PatternCard({
 }
 
 // empate: fica o primeiro
-function peak(items: BarItem[]): BarItem {
+function peak(items: ChartItem[]): ChartItem {
   return items.reduce((top, item) => (item.value > top.value ? item : top));
 }
 
 // loja abre de 8h às 22h: corta as horas vazias do começo e do fim do dia
-function trimEmptyEdges(items: BarItem[]): BarItem[] {
+function trimEmptyEdges(items: ChartItem[]): ChartItem[] {
   const first = items.findIndex((item) => item.value > 0);
   const last = items.length - 1 - [...items].reverse().findIndex((item) => item.value > 0);
   return first === -1 ? items : items.slice(first, last + 1);
