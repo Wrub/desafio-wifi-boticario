@@ -8,12 +8,12 @@ Aplicação React + Vite + Tailwind CSS, servida pelo nginx. Código em `apps/fr
 
 As rotas usam a History API do navegador, sem biblioteca de roteamento. O `main.tsx` escolhe a página pelo caminho.
 
-| Rota          | Tela                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------- |
-| `/`           | totais e padrões de visita da rede, e grade de lojas, com busca por nome ou cidade          |
-| `/lojas/:id`  | loja selecionada: lista de lojas, 3 indicadores, padrões de visita e a tabela de visitantes |
-| `/portal`     | captive portal (simulação), aberto na primeira loja                                         |
-| `/portal/:id` | captive portal de uma loja específica                                                       |
+| Rota          | Tela                                                                                      |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| `/`           | totais e padrões de acesso da rede, e grade de lojas, com busca por nome ou cidade        |
+| `/lojas/:id`  | loja selecionada: lista de lojas, 3 indicadores, padrões de acesso e a tabela de usuários |
+| `/portal`     | captive portal (simulação), aberto na primeira loja                                       |
+| `/portal/:id` | captive portal de uma loja específica                                                     |
 
 O nginx devolve o `index.html` para qualquer rota desconhecida (`nginx.conf`), então os links de loja e do portal funcionam ao abrir direto ou recarregar a página.
 
@@ -109,7 +109,7 @@ main.css      tema (tailwindcss)
 ## Comunicação com a API
 
 - **`api/http.ts`:** faz as chamadas com `fetch`, **valida toda resposta com os schemas de `@wifi/contracts`** e transforma falhas em `ApiRequestError` com uma mensagem pronta para a tela.
-- **`api/dashboard-api.ts`** e **`api/portal-api.ts`:** as chamadas de cada tela. O dashboard lê métricas, padrões de visita, lojas e visitantes; o portal lê as lojas e registra a conexão.
+- **`api/dashboard-api.ts`** e **`api/portal-api.ts`:** as chamadas de cada tela. O dashboard lê métricas, padrões de acesso, lojas e usuários; o portal lê as lojas e registra a conexão.
 - **`api/api-context.tsx`:** injeta em cada tela só a API que ela usa. Nos testes, uma API fake entra no lugar.
 - **`hooks/use-api-query.ts`:** controla carregando, erro e "tentar novamente", e cancela a requisição anterior quando os filtros mudam, pra uma resposta antiga não sobrescrever uma mais nova.
 
@@ -117,12 +117,12 @@ O endereço da API vem de `VITE_API_URL`, definido no build (padrão `http://loc
 
 ## Estados da interface
 
-| Estado           | Como aparece                                         |
-| ---------------- | ---------------------------------------------------- |
-| Carregando       | skeletons no lugar de cards, grade e tabela          |
-| Vazio            | mensagem explicando (nenhuma loja, nenhum visitante) |
-| Erro             | mensagem com o motivo e botão "Tentar novamente"     |
-| Loja inexistente | aviso com botão para voltar à lista de lojas         |
+| Estado           | Como aparece                                                                 |
+| ---------------- | ---------------------------------------------------------------------------- |
+| Carregando       | skeletons no lugar de cards, grade e tabela                                  |
+| Vazio            | mensagem explicando (nenhuma loja, nenhum usuário, nenhum acesso no período) |
+| Erro             | mensagem com o motivo e botão "Tentar novamente"                             |
+| Loja inexistente | aviso com botão para voltar à lista de lojas                                 |
 
 ## Testes
 
