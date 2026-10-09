@@ -27,15 +27,18 @@ describe('registerConnectionSchema', () => {
     expect(registerConnectionSchema.safeParse({ ...validPayload, visitor }).success).toBe(true);
   });
 
-  it.each(['41999998888', '5541999998888', '(41) 99999-8888'])('aceita o celular %s', (phone) => {
-    const result = registerConnectionSchema.safeParse({
-      ...validPayload,
-      visitor: { ...validPayload.visitor, phone },
-    });
-    expect(result.success).toBe(true);
-  });
+  it.each(['41999998888', '5541999998888', '(41) 99999-8888', '(41) 23232-3232'])(
+    'aceita o celular %s',
+    (phone) => {
+      const result = registerConnectionSchema.safeParse({
+        ...validPayload,
+        visitor: { ...validPayload.visitor, phone },
+      });
+      expect(result.success).toBe(true);
+    },
+  );
 
-  it.each(['4133334444', '999998888', '(41) 89999-8888'])('recusa o celular %s', (phone) => {
+  it.each(['4133334444', '999998888', '(01) 99999-8888'])('recusa o celular %s', (phone) => {
     const result = registerConnectionSchema.safeParse({
       ...validPayload,
       visitor: { ...validPayload.visitor, phone },

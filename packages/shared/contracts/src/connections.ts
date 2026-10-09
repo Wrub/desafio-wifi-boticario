@@ -14,8 +14,8 @@ export const deviceSchema = z.object({
 });
 export type Device = z.infer<typeof deviceSchema>;
 
-// Celular BR: DDD + 9 dígitos começando com 9, com ou sem +55 e pontuação
-export const PHONE_REGEX = /^(\+?55\s?)?\(?[1-9]{2}\)?\s?9\d{4}[-\s]?\d{4}$/;
+// Celular BR: DDD + 9 dígitos, com ou sem +55 e pontuação
+export const PHONE_REGEX = /^(\+?55\s?)?\(?[1-9]{2}\)?\s?\d{5}[-\s]?\d{4}$/;
 
 // Dados que o cliente preenche no captive portal do Wi-Fi.
 export const visitorSchema = z.object({

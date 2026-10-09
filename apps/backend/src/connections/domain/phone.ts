@@ -7,7 +7,7 @@ export class Phone {
   static create(value: string): Phone {
     let digits = value.replace(/\D/g, '');
     if (digits.length === 13 && digits.startsWith('55')) digits = digits.slice(2);
-    if (!/^[1-9]{2}9\d{8}$/.test(digits)) {
+    if (!/^[1-9]{2}\d{9}$/.test(digits)) {
       throw new InvalidConnectionError('celular inválido');
     }
     return new Phone(`+55${digits}`);
