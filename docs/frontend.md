@@ -39,6 +39,51 @@ Cada filtro de período fica junto do componente em que atua (padrões de acesso
 
 ![Mobile NavBar](./images/mobile-navbar.png)
 
+## Escolhas de UX e UI
+
+As telas foram pensadas para o dono da loja, que precisa entender os números rapidamente, sem conhecimento técnico, tanto no computador quanto no celular.
+
+### Hierarquia da informação
+
+- **Da rede para a loja, e da loja para o usuário.** A tela inicial mostra a visão da rede (indicadores, padrões de acesso e a grade de lojas), sem nenhuma loja selecionada. Ao escolher uma loja, aparecem os detalhes dela, e o botão "Todas as lojas" volta para a visão geral. Cada nível mostra só o que faz sentido naquele momento.
+- **Resposta primeiro, detalhe depois.** Os indicadores mostram o número em destaque e uma explicação curta embaixo (ex.: "Pessoas diferentes (por número de celular)"). Nos padrões de acesso, o pico aparece em destaque no topo do cartão (ex.: "Sábado"), com a barra correspondente em verde; as demais barras, em cinza, dão o contexto.
+- **Linguagem do negócio.** Os números são apresentados como acessos ao Wi-Fi, e não como visitas à loja, já que uma pessoa pode visitar a loja sem conectar e uma visita pode gerar mais de um acesso. Os números seguem o formato brasileiro (6.000; 2,3), com algarismos de mesma largura, para não "dançarem" quando os valores mudam.
+
+### Filtros e navegação
+
+- **Cada filtro junto do que filtra.** O período dos padrões de acesso fica no cabeçalho do bloco, e o da tabela fica acima da tabela, então fica claro o que cada um altera. Nos padrões, há apenas 30 dias e 12 meses, porque em "Hoje" ou "7 dias" os gráficos de mês e estação ficariam com uma única barra.
+- **Busca que acompanha a digitação.** A busca espera a pessoa parar de digitar antes de consultar, tem um botão para limpar e volta para a primeira página quando a busca ou o período mudam.
+- **Cada loja tem endereço próprio.** O link `/lojas/:id` abre a loja diretamente, pode ser compartilhado e funciona com o botão voltar do navegador.
+- **Espaço para os dados.** No desktop, a lista de lojas pode ser recolhida, ampliando a área da loja e da tabela. A loja selecionada fica marcada em laranja e não pode ser clicada novamente (cursor de "não permitido").
+
+### Feedback e estados
+
+- **Carregamento sem saltos.** Os skeletons têm o formato do conteúdo final e, ao trocar um filtro, os dados anteriores continuam na tela com opacidade reduzida até a nova resposta chegar, em vez de a área ficar vazia.
+- **Erros que dizem o que fazer.** Cada bloco mostra o próprio erro, em português, com o botão "Tentar novamente", e uma falha em um bloco não esconde os outros.
+- **Interações com resposta visual.** Todos os botões têm o cursor de clique, mudança de cor suave ao passar o mouse (`transition-colors`) e contorno visível ao navegar pelo teclado.
+
+### Identidade visual
+
+- **Cores do Grupo Boticário.** Cabeçalho em azul-marinho com o logo, fundo em tom creme, verde para destacar os dados (como o pico de cada gráfico) e o laranja da marca para marcar a loja selecionada. Filtros e barras neutras usam cinza, para não competir com os dados.
+- **Conforto visual.** O fundo creme substitui o branco puro, que cansa a vista em telas de uso prolongado, e os cantos levemente arredondados deixam a interface mais sóbria.
+- **Contraste.** O tom de verde foi escolhido para manter o contraste do texto acima do mínimo recomendado (4,5:1). Um verde mais claro, também presente na marca, ficaria abaixo desse mínimo.
+- **Tipografia.** IBM Plex Sans, legível tanto em números quanto em textos curtos.
+
+### Celular
+
+- A lista de lojas vira uma faixa horizontal logo acima da tabela, perto do conteúdo que ela controla.
+- Os filtros ficam empilhados, e a busca ocupa a largura toda.
+- Tabelas largas rolam dentro do próprio bloco, sem empurrar a página para os lados.
+
+### Formulário do captive portal
+
+- **Formulário curto.** Apenas nome, celular e e-mail são obrigatórios, e o celular e o CPF são formatados enquanto a pessoa digita.
+- **CPF apresentado como benefício.** O campo fica em uma caixa "Clube de vantagens (opcional)", que explica o que a pessoa ganha ao informar, e a mensagem de sucesso muda conforme o CPF foi informado ou não.
+- **Erros no campo certo.** O formulário usa as mesmas regras da API, então o erro aparece no campo antes do envio, e um erro devolvido pela API também é levado ao campo correspondente.
+- **Simulação separada do produto.** Uma faixa no topo avisa que se trata de uma simulação, com link para voltar ao dashboard, e os controles da simulação (troca de loja e aparelho simulado) ficam em uma caixa tracejada abaixo do formulário, separados do que seria a tela real.
+
+Os cuidados de acessibilidade (papéis do ARIA e navegação pelo teclado) estão em [Arquitetura do frontend](./arquitetura.md#arquitetura-do-frontend).
+
 ## Organização do código
 
 ```

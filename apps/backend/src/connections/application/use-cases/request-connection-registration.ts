@@ -14,7 +14,6 @@ export interface RequestConnectionRegistrationInput {
 }
 
 // Chamado pelo POST /connections. Valida e joga na fila, sem gravar no banco,
-// assim o endpoint aguenta pico de conexões (ex.: sábado no shopping).
 export class RequestConnectionRegistration {
   constructor(
     private readonly publisher: ConnectionEventPublisher,
@@ -31,7 +30,6 @@ export class RequestConnectionRegistration {
       visitor: input.visitor,
     });
 
-    // checo aqui pra devolver erro na hora, e não deixar a mensagem morrer no consumer
     if (!(await this.repository.storeExists(connection.storeId))) {
       throw new InvalidConnectionError(`loja ${connection.storeId} não existe`);
     }

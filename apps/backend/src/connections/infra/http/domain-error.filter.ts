@@ -4,7 +4,6 @@ import type { ApiError } from '@wifi/contracts';
 import { DomainError, NotFoundError } from '../../domain/domain.error.js';
 import { EventPublishError } from '../../application/ports/connection-event.publisher.js';
 
-// Converte erro das camadas de dentro em resposta HTTP.
 @Catch(DomainError, EventPublishError)
 export class DomainErrorFilter implements ExceptionFilter {
   private readonly logger = new Logger(DomainErrorFilter.name);

@@ -9,8 +9,6 @@ export interface VisitsDistribution {
   bySeason: Array<{ season: Season; visits: number }>;
 }
 
-// Quando as pessoas usam o Wi-Fi: visitas por dia da semana, hora, mês e estação.
-// Devolve todas as chaves, com 0 onde não teve visita, pra o gráfico não ter buraco.
 export class GetVisitsDistribution {
   constructor(private readonly repository: ConnectionRepository) {}
 

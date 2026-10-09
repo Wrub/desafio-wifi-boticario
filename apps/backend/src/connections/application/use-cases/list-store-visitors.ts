@@ -36,7 +36,7 @@ export class ListStoreVisitors {
     return {
       ...pagination,
       total,
-      // mascaro aqui e não no front: o CPF completo nunca sai da API
+      // mascara do CPF
       items: items.map(({ visitorId, cpf, ...rest }) => ({
         ...rest,
         id: visitorId,
